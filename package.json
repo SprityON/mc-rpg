@@ -1,0 +1,15 @@
+{
+  "name": "mcrpg",
+  "version": "1.0.0",
+  "description": "Minecraft RPG!",
+  "main": "run.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^10.0.0"
+  }
+}
