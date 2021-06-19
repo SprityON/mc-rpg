@@ -1,8 +1,14 @@
-# sprity-bot
-The Official Sprity Bot
+# mc-rpg
+Looking for some fun?
+Are you a gamer?
+Do you love Minecraft?
+And Discord?
 
-This bot is designed and programmed completely for my own Discord server.
+Then this bot might your go-to!
 
-If you want to see the progress of this bot and its future plans, then use this link: https://trello.com/b/5Ac8qsa7/sprity-bot
-
-For my Discord server, use this link: https://discord.gg/t23Xcwc
+It features:
+- 1 versus 1 (against REAL mobs or players!) gameplay;
+- A shop system;
+- "Go on an adventure" for if you want that extra loot;
+- "Go Mine" (small chance to receive diamonds);
+- and LOTS more!
