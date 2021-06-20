@@ -3,7 +3,9 @@ module.exports = {
     require('../BotClass')
     .Commands.forEach(cmd => {
 
-      if (msg.content.includes(cmd.name)) {
+      let prefix;
+
+      if (msg.content.includes(cmd.name) || msg.content.includes(cmd.aliases)) {
         require(`../commands/${cmd.category}/${cmd.name}`).execute(msg);
       }
 

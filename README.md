@@ -4,7 +4,7 @@ Are you a gamer?
 Do you love Minecraft?
 And Discord?
 
-Then this bot might your go-to!
+Then this bot might be your go-to!
 
 It features:
 - 1 versus 1 (against REAL mobs or players!) gameplay;

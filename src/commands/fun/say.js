@@ -1,4 +1,12 @@
-const { other: { command: { getName, getCategory, getUsage } } } = (new (require('../../Utils')))
+const { 
+  strMods: { createEmbed }, 
+  other: { 
+    colors: { firstMemberRoleColor, botRoleColor },
+    command: { 
+      getName, getCategory, getUsage 
+    } 
+  } 
+} = (new (require('../../Utils')))
 
 module.exports = {
   name: getName(__filename, __dirname),
@@ -6,7 +14,15 @@ module.exports = {
   usage: getUsage(__filename, __dirname),
 
   execute(msg, ...args) {
-    msg.channel.send(msg.content.slice(this.usage.length))
+    msg.channel.send(
+      createEmbed(
+        [
+          [
+            `${msg.author.username} said:`, `\`\`\`` + msg.content.slice(this.usage.length) + `\`\`\``
+          ]
+        ], { color: botRoleColor(msg.guild.me) }
+      )
+    );
   },
 
   help: {
