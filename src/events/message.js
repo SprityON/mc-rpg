@@ -1,10 +1,10 @@
 module.exports = {
-  execute(msg, args) {
+  execute(msg) {
     require('../BotClass')
     .Commands.forEach(cmd => {
 
-      if (msg.content.includes(cmd.info.name)) {
-        console.log(cmd.info.name);
+      if (msg.content.includes(cmd.name)) {
+        require(`../commands/${cmd.category}/${cmd.name}`).execute(msg);
       }
 
     });
