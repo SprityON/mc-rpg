@@ -1,24 +1,26 @@
 const { 
   strMods: { createEmbed }, 
   other: { 
-    colors: { firstMemberRoleColor, botRoleColor },
+    colors: { botRoleColor },
     command: { 
       getName, getCategory, getUsage 
     } 
   } 
-} = (new (require('../../Utils')))
+} = require('../../Utils')
 
 module.exports = {
   name: getName(__filename, __dirname),
   category: getCategory(__filename),
   usage: getUsage(__filename, __dirname),
+  aliases: ['mimick'],
 
-  execute(msg, ...args) {
+  execute(msg, args) {
+    if (!args[0]) return msg.channel.send(`Seems like you didn't really want me to say something lol`)
     msg.channel.send(
       createEmbed(
         [
           [
-            `${msg.author.username} said:`, `\`\`\`` + msg.content.slice(this.usage.length) + `\`\`\``
+            `${msg.author.username} said:`, `\`\`\`` + msg.content.slice(msg.content.split(" ")[0].length + 1) + `\`\`\``
           ]
         ], { color: botRoleColor(msg.guild.me) }
       )
@@ -28,8 +30,7 @@ module.exports = {
   help: {
     enabled: true,
     title: 'Say',
-    aliases: [],
     description: `I will mimick your message!`,
-    permissions: ['sendMessages']
+    permissions: ['SEND_MESSAGES', 'ADMINISTRATOR']
   }
 }
