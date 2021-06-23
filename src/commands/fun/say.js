@@ -5,6 +5,7 @@ module.exports = {
   category: Utils.getCmdCategory(__filename),
   usage: Utils.getCmdUsage(__filename, __dirname),
   aliases: ['mimick'],
+  permissions: ['SEND_MESSAGES'],
 
   execute(msg, args) {
     if (!args[0]) return msg.channel.send(`Seems like you didn't really want me to say something lol`)
@@ -22,7 +23,6 @@ module.exports = {
   help: {
     enabled: true,
     title: 'Say',
-    description: `I will mimick your message!`,
-    permissions: ['SEND_MESSAGES', 'ADMINISTRATOR']
+    description: `I will mimick your message!`
   }
 }

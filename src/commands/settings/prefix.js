@@ -5,6 +5,7 @@ module.exports = {
   category: Utils.getCmdCategory(__filename),
   usage: Utils.getCmdUsage(__filename, __dirname),
   aliases: ['p'],
+  permissions: ['SEND_MESSAGES', 'ADMINISTRATOR'],
 
   execute(msg, args) {
     Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, result => {
@@ -43,7 +44,6 @@ module.exports = {
   help: {
     enabled: true,
     title: '',
-    description: ``,
-    permissions: ['SEND_MESSAGS', 'ADMINISTRATOR']
+    description: ``
   }
 }

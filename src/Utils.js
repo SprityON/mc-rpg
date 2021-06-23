@@ -1,5 +1,3 @@
-const BotClass = require('./BotClass');
-
 module.exports = class Utils {
 
   /* STARTUP METHODS AND PROPERTIES */
@@ -84,11 +82,11 @@ module.exports = class Utils {
     let embed = new BotClass.Discord.MessageEmbed()
       .setColor(Utils.botRoleColor());
 
-    const colors = [{
-      'error': 'ff0000'
-    }];
+    const colors = [
+      { 'error': 'ff0000' },
+      { 'success': '00ff00' }
+    ];  
 
-    // options
     if (settings.title) embed.setTitle(settings.title) 
     if (settings.description) embed.setDescription(settings.description)
     if (settings.color) embed.setColor(settings.color) 
@@ -101,8 +99,8 @@ module.exports = class Utils {
       embedColor
       ? embed.setColor(embedColor)
       : embed.setColor(Utils.botRoleColor())
-
     }
+
     if (settings.footer == true) embed.setFooter('For more information, please use the help command');
     if (!fields[0] || fields[0].length == 0) {
       if (settings.title || settings.description) 
@@ -110,7 +108,6 @@ module.exports = class Utils {
       throw new Error("Embed needs to have at least a title, description or two fields.")
     }
 
-    // fields
     for (let i = 0; i < fields.length; i++) {
       const field = fields[i]
       

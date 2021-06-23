@@ -1,0 +1,29 @@
+[
+	{
+		"id": "fists",
+		"name": "Fists",
+		"description": "My fists are strong like blocks.",
+		"price": 0,
+		"buyable": false,
+		
+		"combat": {
+			"damageMultiplier": 0.6,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1
+		}
+	},
+	{
+		"id": "wooden_sword",
+		"name": "Wooden Sword",
+		"description": "Slightly stronger then your fists.",
+		"price": 25,
+		"buyable": true,
+		"currency": "wood",
+		
+		"combat": {
+			"damageMultiplier": 0.8,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1
+		}
+	}
+]

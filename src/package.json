@@ -4,7 +4,8 @@
   "description": "Minecraft RPG!",
   "main": "run.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"nodemon": "nodemon ./server.js localhost 3080"
   },
   "author": "Sprity",
   "license": "GPL-3.0",
@@ -16,5 +17,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/SprityON/mc-rpg"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }

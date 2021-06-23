@@ -33,13 +33,13 @@ module.exports = new class BotClass {
 	guildCreate(guild) {
 		guild.channels.cache.find(channel => channel.id === guild.channels.cache.filter(chan => chan.type === 'text').first().id).send(
 			Utils
-				.createEmbed([
+				.createEmbed(
+				[
 					['Thanks for adding me to your server!', 'Want to change some settings? Use `mc!help`']
-				], { color: require('./Utils').other.colors.botRoleColor }
+				], { color: Utils.botRoleColor() }
 				))
 
-			query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
-		return;
+			return query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
 	}
 
 	guildDelete(guild) {
