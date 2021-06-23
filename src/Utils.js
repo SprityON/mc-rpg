@@ -1,15 +1,12 @@
-const { Discord } = require('./BotClass');
+const BotClass = require('./BotClass');
 
-module.exports = new class Utils {
-  constructor() {
+module.exports = class Utils {
 
-  }
+  /* STARTUP METHODS AND PROPERTIES */
 
-  load() {
-    // LOAD COMMANDS //
-
-    const { readdirSync } = this.modules.fs;
-    require('./BotClass').Commands = new (require('./BotClass')).Discord.Collection();
+  static load() {
+    const BotClass = require('./BotClass');
+    const { readdirSync } = require('fs');
 
     readdirSync(`./commands`).filter(selected => !selected.endsWith(
       selected.split(".")[1]
@@ -20,16 +17,16 @@ module.exports = new class Utils {
         .forEach(commandFile => {
           const command = require(`${__dirname}\\commands\\${category}\\${commandFile}`);
 
-          require('./BotClass').Commands.set(command.name, command);
+          BotClass.Commands.set(command.name, command);
         })
     })
-    
-    // LOAD EVENTS //
+
     readdirSync(`./events`)
       .filter(selected => selected.endsWith('.js'))
       .forEach(e => {
-        require('./BotClass').client["on"]
-          (this.strMods.getFileName(e),
+
+        BotClass.client["on"]
+          (Utils.getFileName(e),
             (...args) => {
               if (args[0].author.bot && args[0].author.bot === true) return
               require(`${__dirname}\\events\\${e}`).execute(...args);
@@ -37,137 +34,152 @@ module.exports = new class Utils {
       })
   }
 
-  db = {
-    async query(sql, callback) {
-      let con = require('./BotClass').dbConnect();
-      let scnd_arg = arguments[1];
-
-       con.query(sql, function (err, result, fields) {
-        if (scnd_arg) {
-          callback([result, fields, err]);
-        } else { if (err) throw err }
-      })
-    }
-  }
-
-  modules = {
+  static modules = {
     fs: require('fs'),
   }
 
-  strMods = {
+  /* DB METHODS */
 
-    /**
-     * Returns the file name in the current directory for any given path
-     * 
-     * @param {String} path 
-     * @returns 
-     */
-
-    getFileName(path) {
-      let FileName;
-      path.endsWith('.js')
-        ? FileName = path.split("\\")[path.split('\\').length - 1].split(".")[0]
-        : FileName = path.split("\\")[path.split('\\').length]
-
-      return FileName;
-    },
-
-    /**
-     * Create a custom embed with specified fields and options
-     * 
-     * @param {Array} fields 
-     * @param {Object} options
-     * @returns
-     */
-
-    createEmbed(fields, options = { 
-      title: '',
-      color: '',
-      enableFooter: false
+  static dbConnect() {
+    return require('mysql').createConnection({
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: "mc_rpg",
+      connectTimeout: 30000
     })
-      {
-      let embed = new (require('./BotClass')).Discord.MessageEmbed()
-      .setColor(process.env.EMBEDCOLOR);
-
-      // options
-      if (options.title) embed.setTitle(options.title)
-      if (options.color) { 
-        try {
-          embed.setColor(options.color);
-        } catch (err) {
-          embed.setColor(process.env.EMBEDCOLOR)
-        }
-      }
-      if (options.enableFooter == true) embed.setFooter('For more information, please use mc?help');
-
-      // fields
-      for (let i = 0; i < fields.length; i++) {
-        const field = fields[i]
-
-        embed.addField(field[0], field[1]);
-      }
-
-      return embed;
-    }
   }
 
-  moderation = {
-    checkIfMod(member) {
-      const staffPermissions = 
-      [
-        'KICK_MEMBERS', 
-        'BAN_MEMBERS', 
-        'MANAGE_CHANNELS', 
-        'MANAGE_GUILD', 
-        'MOVE_MEMBERS', 
-        'MANAGE_NICKNAMES',
-        'MANAGE_ROLES'
-      ];
+  static async query(sql, callback) {
+    let con = require('./Utils').dbConnect();
+    let scnd_arg = arguments[1];
 
-      for (const perm of staffPermissions)
-        if (msg.member.permissions.has(perm)) return true;
-      return false;
-    },
-
-    checkIfAdmin(member) {
-      if (msg.member.permissions.has("ADMINISTRATOR")) return true;
-      return false;
-    }
+      con.query(sql, function (err, result, fields) {
+      if (scnd_arg) {
+        callback([result, fields, err]);
+      } else { if (err) throw err }
+    })
   }
 
-  other = { 
-    colors: {
-      firstMemberRoleColor(member) { return member.roles.cache.first().color },
-      firstMentionedMemberColor(member) { return member.roles.cache.first().color },
-      botRoleColor(me) { return me.roles.cache.first() ? me.roles.cache.first().color : process.env.EMBEDCOLOR },
-      randomColor() {
-        let format = 'abcdef0123456789';
-        let color = '#';
+  /* UTILITY METHODS */
 
-        for (let i = 0; i < 6; i++) 
-          color += format[Math.floor(Math.random() * format.length) + 1];
-        return color;
-       }
-    },
+  /**
+   * Create a custom embed with specified fields and options
+   * 
+   * @param {Array} fields 
+   * @param {Object} options
+   * @returns
+   */
 
-    command: {
-      getName(filename, dirname) {
-        const cmdName = filename.replace(dirname + '\\', '').split('.')[0];
+  static createEmbed(fields, settings = {
+    title: '',
+    description: '',
+    color: '',
+    status: '',
+    footer: false
+  }) {
+    const BotClass = require('./BotClass');
+    const Utils = require('./Utils')
 
-        return cmdName;
-      },
+    let embed = new BotClass.Discord.MessageEmbed()
+      .setColor(Utils.botRoleColor());
 
-      getCategory(filename) {
-        const cmdCategory = filename.split('\\')[filename.split('\\').length - 2];
+    const colors = [{
+      'error': 'ff0000'
+    }];
 
-        return cmdCategory;
-      },
+    // options
+    if (settings.title) embed.setTitle(settings.title) 
+    if (settings.description) embed.setDescription(settings.description)
+    if (settings.color) embed.setColor(settings.color) 
+    if (settings.status) {
 
-      getUsage(filename, dirname) {
-        const cmdUsage = require('./config.json').defaultPrefix + filename.replace(dirname + '\\', '').split('.')[0] + ' ';
+      let embedColor;
+      for (const color of colors) 
+        if (settings.status.includes(Object.keys(color))) embedColor = Object.values(color).toString();
 
-        return cmdUsage;
-      }
+      embedColor
+      ? embed.setColor(embedColor)
+      : embed.setColor(Utils.botRoleColor())
+
     }
+    if (settings.footer == true) embed.setFooter('For more information, please use the help command');
+    if (!fields[0] || fields[0].length == 0) {
+      if (settings.title || settings.description) 
+        return embed
+      throw new Error("Embed needs to have at least a title, description or two fields.")
+    }
+
+    // fields
+    for (let i = 0; i < fields.length; i++) {
+      const field = fields[i]
+      
+      if (field[2]) throw new Error("Cannot add more then two fields")
+
+      if (i === 0 && settings.status) {
+        embed.addField('STATUS: ' + settings.status.toUpperCase(), field[1]);
+        continue;
+      } 
+
+      embed.addField(field[0], field[1]);
+    }
+
+    return embed;
+  }
+
+  /**
+   * Returns the file name in the current directory for any given path
+   * 
+   * @param {String} path 
+   * @returns 
+   */
+
+  static getFileName(path) {
+    let fileName;
+    path.endsWith('.js')
+      ? fileName = path.split("\\")[path.split('\\').length - 1].split(".")[0]
+      : fileName = path.split("\\")[path.split('\\').length]
+
+    return fileName;
+  }
+
+  static firstMemberRoleColor(member) { 
+    return member.roles.cache.first().color 
+  }
+
+  static firstMentionedMemberColor(member) {
+    return member.roles.cache.first().color 
+  }
+
+  static botRoleColor() {
+    const me = require('./BotClass').client.guilds.cache.first().me
+    return me.roles.cache.first() ? me.roles.cache.first().color : process.env.EMBEDCOLOR 
+  }
+
+  static randomColor() {
+    let format = 'abcdef0123456789';
+    let color = '#';
+
+    for (let i = 0; i < 6; i++) 
+      color += format[Math.floor(Math.random() * format.length) + 1];
+    return color;
+  }
+
+  static getCmdName(filename, dirname) {
+    const cmdName = filename.replace(dirname + '\\', '').split('.')[0];
+
+    return cmdName;
+  }
+
+  static getCmdCategory(filename) {
+    const cmdCategory = filename.split('\\')[filename.split('\\').length - 2];
+
+    return cmdCategory;
+  }
+
+  static getCmdUsage(filename, dirname) {
+    const cmdUsage = require('./config.json').defaultPrefix + filename.replace(dirname + '\\', '').split('.')[0] + ' ';
+
+    return cmdUsage;
   }
 }
