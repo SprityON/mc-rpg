@@ -9,44 +9,26 @@ module.exports = {
   permissions: ['SEND_MESSAGES'],
 
   async execute(msg, args) {
-    await Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, async result => {
-      const inv = JSON.parse(result[0][0].inventory);
-      const itemsJSON = require('./items/items.json');
-      const status = Math.floor(args[0]);
+      const page = Math.floor(args[1]);
 
-      let lastPage, currPage = 1;
-
-      status 
-      ? currPage = (10 * status) / 10 
-      : currPage = 1
-
-      let embed = new BotClass.Discord.MessageEmbed()
-      .setColor(Utils.botRoleColor())
-      .setAuthor(`${msg.author.username}'s inventory`, msg.author.avatarURL())
-
-      let i = 0;
-      let text = '';
-      inv.forEach(item => {
-
-        const item_name = Object.keys(item)[0];
-        const item_amount = Object.values(item)[0];
-
-        const foundItem = itemsJSON.find(e => e.id === item_name);
-        if (foundItem) {
-          i++
-          text += `**${foundItem.name} ▬** ${item_amount}\n\
-          *ID* \`${foundItem.id}\`\n\n`
-        }
-      })
-
-      embed.addField(`${i} items total`, text)
-      msg.channel.send(embed)
-    })
+      Utils.embedInventoryList({
+        member: msg.member,
+        currPage: page,
+        showAmountOfItems: 5
+      }, ([success, message]) => {
+        if (success) {
+          // if success = true then message = embed
+          msg.channel.send(message);
+        } else {
+          // if success = false then message = error message
+          msg.channel.send(message);
+        };
+      });
   },
 
   help: {
-    title: '',
-    description: ``,
-    enabled: false
+    title: 'Inventory',
+    description: `View your inventory!`,
+    enabled: true
   }
 }

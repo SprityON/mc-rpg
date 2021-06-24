@@ -39,7 +39,7 @@ module.exports = new class BotClass {
 				], { color: Utils.botRoleColor() }
 				))
 
-			return query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
+			return Utils.query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
 	}
 
 	guildDelete(guild) {

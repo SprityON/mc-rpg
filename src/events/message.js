@@ -3,8 +3,7 @@ const BotClass = require('../BotClass');
 
 module.exports = {
   execute(msg) {
-    msg.channel.startTyping();
-    Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, result => {
+    Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, async result => {
       if (!result[0][0])
           return Utils.query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${msg.guild.id}', '${require('../config.json').defaultPrefix}')`);
 
@@ -12,8 +11,10 @@ module.exports = {
 
       if (!msg.content.toLowerCase().startsWith(prefix)) return
 
-      const args = msg.content.trim().split(/ +/).splice(1,1)
+      msg.channel.startTyping();
+
       const command = msg.content.trim().split(/ +/)[0].slice(prefix.length, msg.content.trim().split(/ +/)[0].length).toLowerCase();
+      const args = msg.content.trim().split(/ +/).slice(1, msg.content.length);
 
       try {
         for (let cmd of BotClass.Commands) {
@@ -28,10 +29,14 @@ module.exports = {
             })
 
             enoughPermissions 
-            ? cmdFile.execute(msg, args) 
+            ? await cmdFile.execute(msg, args) 
             : msg.inlineReply(`**${msg.author.username}**, you do not have enough permissions to use this command!`)
+
+            return msg.channel.stopTyping();
           } 
         }
+
+        throw new Error(`Command ${command} does not exist`);
 
       } catch (err) {
         if (err) console.log(err)
@@ -44,8 +49,9 @@ module.exports = {
             [`ERROR`, `${text}`]
           ], { footer: true, status: 'error' }
         ))
+
+        msg.channel.stopTyping();
       }
-      msg.channel.stopTyping();
     })
   }
 }
