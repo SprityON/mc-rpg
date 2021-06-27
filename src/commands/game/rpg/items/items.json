@@ -1,29 +1,148 @@
 [
 	{
-		"id": "fists",
-		"name": "Fists",
-		"description": "My fists are strong like blocks.",
-		"price": 0,
-		"buyable": false,
-		
-		"combat": {
-			"damageMultiplier": 0.6,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1
-		}
+		"id": "log",
+		"name": "Log",
+		"description": "A regular log.",
+		"sellPrice": 0.02,
+		"canLumber": true,
+		"rarity": "common"
 	},
+	
 	{
-		"id": "wooden_sword",
-		"name": "Wooden Sword",
-		"description": "Slightly stronger then your fists.",
-		"price": 25,
-		"buyable": true,
-		"currency": "wood",
-		
-		"combat": {
-			"damageMultiplier": 0.8,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1
-		}
+		"id": "leaves",
+		"name": "Leaves",
+		"description": "Well, at least it supports our ecosystem.",
+		"sellPrice": 0.002,
+		"canLumber": true,
+		"rarity": "common"
+	},
+	
+	{
+		"id": "stick",
+		"name": "Stick",
+		"description": "A stick.",
+		"sellPrice": 0.005,
+		"recipe": [
+			{ "wooden_planks": 2 }
+		]
+	},
+	
+	{
+		"id": "cobblestone",
+		"name": "Cobblestone",
+		"description": "Some cobblestone.",
+		"sellPrice": 0.004,
+		"mineable": true,
+		"rarity": "common",
+		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+	
+	{
+		"id": "andesite",
+		"name": "Andesite",
+		"description": "Grey colored stone which can be sold.",
+		"sellPrice": 0.004,
+		"mineable": true,
+		"rarity": "uncommon",
+		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+	
+	{
+		"id": "diorite",
+		"name": "Diorite",
+		"description": "White colored stone which can be sold.",
+		"sellPrice": 0.004,
+		"mineable": true,
+		"rarity": "uncommon",
+		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+	
+	{
+		"id": "dirt",
+		"name": "Dirt",
+		"description": "A pretty useless block I must say.",
+		"sellPrice": 0.004,
+		"mineable": true,
+		"rarity": "uncommon",
+		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+	
+	{
+		"id": "granite",
+		"name": "Granite",
+		"description": "A pretty messy red block... ",
+		"sellPrice": 0.004,
+		"mineable": true,
+		"rarity": "uncommon",
+		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+	
+	{
+		"id": "redstone",
+		"name": "Redstone",
+		"description": "Useful for certain shop items.",
+		"sellPrice": 0.010,
+		"mineable": true,
+		"rarity": "rare",
+		"mineableWith": ["iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+	
+	{
+		"id": "gold_ingot",
+		"name": "Gold Ingot",
+		"description": "With Gold Ingots you can make Golden Apples!",
+		"sellPrice": 0.010,
+		"mineable": true,
+		"rarity": "rare",
+		"mineableWith": [
+			"iron_pickaxe",
+			"diamond_pickaxe",
+			"netherite_pickaxe"
+		]
+	},
+	
+	{
+		"id": "iron_ingot",
+		"name": "Iron Ingot",
+		"description": "A great starting ore!",
+		"sellPrice": 0.010,
+		"mineable": true,
+		"rarity": "rare",
+		"mineableWith": [
+			"stone_pickaxe",
+			"iron_pickaxe",
+			"diamond_pickaxe",
+			"netherite_pickaxe"
+		]
+	},
+
+	{
+		"id": "diamond",
+		"name": "Diamond",
+		"description": "The infamous diamond...",
+		"sellPrice": 0.083,
+		"mineable": true,
+		"rarity": "epic",
+		"mineableWith": ["iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+
+	{
+		"id": "obsidian",
+		"name": "Obsidian",
+		"description": "Useful for creating the nether portal.",
+		"sellPrice": 0.050,
+		"mineable": true,
+		"rarity": "epic",
+		"mineableWith": ["diamond_pickaxe", "netherite_pickaxe"]
+	},
+
+	{
+		"id": "emerald",
+		"name": "Emerald",
+		"description": "Useful for buying modpacks, enchantments and more from the store.",
+		"sellPrice": 1,
+		"mineable": true,
+		"rarity": "legendary",
+		"mineableWith": ["iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	}
 ]

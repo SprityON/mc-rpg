@@ -6,27 +6,38 @@ module.exports = {
   usage: Utils.getCmdUsage(__filename, __dirname),
   aliases: [],
   permissions: ['SEND_MESSAGES'],
+  timeout: 1000,
 
   execute(msg) {
 
     Utils.query(`SELECT member_id FROM members WHERE member_id = ${msg.member.id}`, ([row]) => {
       if (row[0]) return msg.inlineReply(`Oi, blockhead (pun intended)! You already have an account.`)
-      msg.channel.send(`**${msg.author.username}**, please type in your RPG name. (or cancel)`)
+      msg.inlineReply(`**${msg.author.username}**, please type in your RPG name. (or cancel)`)
 
       const filter = m => m.author.id === msg.author.id
+
       msg.channel.awaitMessages(filter, { timeout: 60000, max: 1 })
         .then(collected => {
-          if (collected.first().content.toLowerCase() === 'cancel') return msg.channel.send(`Cancelled for **${msg.author.username}**!`);
-          console.log('test')
+
+          if (collected.first().content.toLowerCase() === 'cancel') return msg.inlineReply(`Cancelled for **${msg.author.username}**!`);
+
           const RPG_name = collected.first().content;
-          Utils.query(`INSERT INTO members (member_id, inventory) VALUES ('${msg.member.id}', '{ diamonds: 0 }')`).then(
-            msg.channel.send(
-              Utils.createEmbed(
-                [
-                  [`Welcome ${RPG_name}!`, `Hey there, crafter! FYI: you can always change your RPG name later!`]
-                ], { footer: true }
-              ))
+            
+          Utils.query(`INSERT INTO members (member_id, inventory) VALUES ('${msg.member.id}', '[{ "emerald": 0, "tools": [], "items": [] }]')`).then(
+            Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, data => {
+              msg.inlineReply(
+                Utils.createEmbed(
+                  [
+                    [`Welcome ${RPG_name}!`, `Let's get to work:\n\
+                  \`${data[0][0].prefix}rpg mine\` - Go mining!\n\
+                  \`${data[0][0].prefix}rpg hunt\` - Go hunt for loot and XP!\n\
+                  \`${data[0][0].prefix}rpg lumber\` - Go chop some wood!`]
+                  ], { footer: true }
+                ))
+            })
           )
+        }).catch(collected => {
+          return msg.inlineReply(`Cancelled!`);
         })
     })
   },

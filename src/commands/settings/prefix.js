@@ -6,6 +6,7 @@ module.exports = {
   usage: Utils.getCmdUsage(__filename, __dirname),
   aliases: ['p'],
   permissions: ['SEND_MESSAGES', 'ADMINISTRATOR'],
+  timeout: 1000,
 
   execute(msg, args) {
     Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, result => {

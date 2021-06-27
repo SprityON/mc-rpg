@@ -74,7 +74,9 @@ module.exports = class Utils {
     description: '',
     color: '',
     status: '',
-    footer: false
+    thumbnail,
+    footer: false,
+    setFooter: ''
   }) {
     const BotClass = require('./BotClass');
     const Utils = require('./Utils')
@@ -87,6 +89,7 @@ module.exports = class Utils {
       { 'success': '00ff00' }
     ];  
 
+    if (settings.setFooter) embed.setFooter(settings.setFooter)
     if (settings.title) embed.setTitle(settings.title) 
     if (settings.description) embed.setDescription(settings.description)
     if (settings.color) embed.setColor(settings.color) 
@@ -100,7 +103,9 @@ module.exports = class Utils {
       ? embed.setColor(embedColor)
       : embed.setColor(Utils.botRoleColor())
     }
-
+    if (settings.thumbnail) {
+      embed.setThumbnail()
+    }
     if (settings.footer == true) embed.setFooter('For more information, please use the help command');
     if (!fields[0] || fields[0].length == 0) {
       if (settings.title || settings.description) 
@@ -114,7 +119,7 @@ module.exports = class Utils {
       if (field[2]) throw new Error("Cannot add more then two fields")
 
       if (i === 0 && settings.status) {
-        embed.addField('STATUS: ' + settings.status.toUpperCase(), field[1]);
+        embed.addField('STATUS: ' + field[0], field[1]);
         continue;
       } 
 
@@ -183,18 +188,24 @@ module.exports = class Utils {
   static embedInventoryList({
     member,
     currPage,
-    showAmountOfItems
+    showAmountOfItems,
+    filter
   }, callback ) {
     const Utils = require('./Utils');
 
     Utils.query(`SELECT * FROM members WHERE member_id = ${member.id}`, async result => {
       const inventory = JSON.parse(result[0][0].inventory);
 
-      const BotClass = require('./BotClass');
-      const itemsJSON = require('./commands/game/rpg/items/items.json');
-      // the amount of items which are currently shown in one page
+      let emeraldAmount = inventory[0]['emerald']
+      if (emeraldAmount !== 0) {
+        if (emeraldAmount < 0.1) { emeraldAmount = emeraldAmount.toFixed(3) } else
+        if (emeraldAmount < 1) { emeraldAmount = emeraldAmount.toFixed(2) } else 
+        if (emeraldAmount < 10) emeraldAmount = emeraldAmount.toFixed(1)
+      } 
 
-      
+      const BotClass = require('./BotClass');
+
+      // the amount of items which are currently shown in one page
       let pageItemsAmount = 0;
 
       // all items that the user has in their inventory
@@ -205,9 +216,10 @@ module.exports = class Utils {
       let i = 0;
       let testI = 0;
 
+      let emeraldEmote = BotClass.client.emojis.cache.find(e => e.name === 'emerald');
       let embed = new BotClass.Discord.MessageEmbed()
         .setColor(Utils.botRoleColor())
-        .setAuthor(`${member.user.username}'s inventory`, member.user.avatarURL())
+        .setDescription(`**𝗜𝗡𝗩𝗘𝗡𝗧𝗢𝗥𝗬 ───────── ${emeraldEmote} ${emeraldAmount}**`)
 
       // if the currentpage (which the user chooses) is higher then 1, then in the i var, multiply the currpage by the amount of items and - the amount of items 
       // say for example a user wants to see page 3 with 5 items:
@@ -224,13 +236,65 @@ module.exports = class Utils {
       if (!currPage) currPage = 1;
 
       if (currPage > 1) { i = (currPage * showAmountOfItems) - showAmountOfItems }
+      
+      let listJSON = []
+      listJSON.push(require(`./commands/game/rpg/items/items.json`));
+      listJSON.push(require(`./commands/game/rpg/tools/tools.json`));
 
-      for (const item of inventory) {
+      let allJSON = listJSON;
 
-        const item_amount = Object.values(item)[0];
-        const foundItem = itemsJSON.find(e => e.id === Object.keys(item)[0]);
+      if (filter) {
+        try {
+          allJSON = Array.from(require(`./commands/game/rpg/${filter}/${filter}.json`));
+        } catch (error) {
+          filter = '';
+        }
+      }
 
-        if (foundItem) {
+      let item = inventory.splice(1, 2)[0]
+
+      let foundItems = []
+
+      if (filter) {
+        
+        if (filter == 'tools') {
+
+          for (let i of allJSON) {
+
+            for (let o of item.tools) {
+              if (i.id === Object.keys(o)[0]) {
+                foundItems.push({ id: i.id, name: i.name, amount: Object.values(o)[0] })
+              }
+            }
+          }
+        } 
+
+        else if (filter == 'items') {
+
+          for (let i of allJSON) {
+
+            for (let o of item.items) {
+              if (i.id === Object.keys(o)[0]) {
+                foundItems.push({ id: i.id, name: i.name, amount: Object.values(o)[0] })
+              }
+            }
+          }
+        }
+      } else {
+        allJSON = allJSON[0].concat(allJSON[1])
+
+        for (let i of allJSON) {
+
+          for (let o of item.items.concat(item.tools)) {
+            if (i.id === Object.keys(o)[0]) {
+              foundItems.push({ id: i.id, name: i.name, amount: Object.values(o)[0] })
+            }
+          }
+        }
+      }
+
+      if (foundItems) {
+        for (let foundItem of foundItems) {
           totalItemsAmount++
 
           let emote = BotClass.client.emojis.cache.find(e => e.name === foundItem.id);
@@ -244,8 +308,8 @@ module.exports = class Utils {
 
             if (pageItemsAmount > showAmountOfItems) break;
 
-            text += `${emote} **${foundItem.name} ▬** ${item_amount}\n\
-              *ID* \`${foundItem.id}\`\n\n`
+            text += `${emote} **${foundItem.name} ▬** ${foundItem.amount}\n\
+          *ID* \`${foundItem.id}\`\n\n`
 
             testI++
             i++
@@ -257,24 +321,51 @@ module.exports = class Utils {
 
       let lastPage;
       let totalItemsAmount_temp = totalItemsAmount / showAmountOfItems;
-      if (totalItemsAmount_temp < 1) {
-        lastPage = 1
-      } else {
-        lastPage = Math.ceil(totalItemsAmount_temp)
-      }
+      totalItemsAmount_temp < 1 ? lastPage = 1 : lastPage = Math.ceil(totalItemsAmount_temp);
 
       if (currPage > lastPage) {
         if (lastPage == 1) {
-          return callback([false, `**${msg.author.username}**, there is only 1 page!`]);
+          return callback(`**${member.user.username}**, there is only 1 page!`);
         } else {
-          return callback([false, `**${msg.author.username}**, there are only ${lastPage} pages!`]);
+          return callback(`**${member.user.username}**, there are only ${lastPage} pages!`);
         }
       }
 
       embed.addField(`${totalItemsAmount} items total`, text)
-        .setFooter(`Use help for more info | Page ${currPage} of ${lastPage}`)
+        .setFooter(`Filtering: rpg inventory <tools/items> | Page ${currPage} of ${lastPage}`)
 
-      callback([true, embed])
-  })
+      callback(embed)
+    })
+  }
+  
+  static commandCooldown = { 
+    cooldownSet: new Set(),
+    async execute(member, command) {
+      let thisUserInSet = false
+      const userObj = { id: member.id, command: command, timeout: Date.now() + command.timeout }
+      
+      for (const user of this.cooldownSet) {
+
+        if (user.id === member.id) {
+          if (command.name === user.command.name) {
+            thisUserInSet = true
+
+            if (user.timeout < Date.now()) {
+              this.cooldownSet.delete(user)
+
+              thisUserInSet = false
+            } else {
+              let seconds = Math.floor((user.timeout - Date.now()) / 1000)
+              return [true, seconds]
+            }
+          }
+        }
+      }
+
+      if (!thisUserInSet) {
+        this.cooldownSet.add(userObj)
+        return [false]
+      }
+    }
   }
 }

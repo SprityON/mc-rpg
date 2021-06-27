@@ -1,0 +1,75 @@
+[
+	{
+		"id": "fists",
+		"name": "Fists",
+		"description": "My fists are strong like blocks.",
+		"craftable": true,
+		
+		"combat": {
+			"damageMultiplier": 0.6,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 1
+		}
+	},
+
+	{
+		"id": "wooden_sword",
+		"name": "Wooden Sword",
+		"description": "Slightly stronger then your fists.",
+		"recipe": [
+			{
+				"stick": 2,
+				"wooden_planks": 3
+			}
+		],
+		"category": ["combat"],
+		"craftable": true,
+		
+		"combat": {
+			"damageMultiplier": 0.8,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 1.1
+		}
+	},
+
+	{
+		"id": "wooden_axe",
+		"name": "Wooden Axe",
+		"description": "You can do some lumber with this one! Oh and you can fight with it.",
+		"recipe": [
+			{
+				"stick": 2,
+				"wooden_planks": 3
+			}
+		],
+		"category": ["lumber", "combat"],
+		"craftable": true,
+		
+		"combat": {
+			"damageMultiplier": 1,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 0.9
+		}
+	},
+
+	{
+		"id": "wooden_pickaxe",
+		"name": "Wooden Pickaxe",
+		"description": "You can do some lumber with this one! Oh and you can attack.",
+		"recipe": [
+			{ "stick": 2 }, 
+			{ "wooden_planks": 3 }
+		],
+		"category": "mining",
+		"craftable": true,
+		
+		"combat": {
+			"damageMultiplier": 0.8,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1
+		}
+	}
+]

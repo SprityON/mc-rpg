@@ -6,8 +6,10 @@ module.exports = {
   usage: Utils.getCmdUsage(__filename, __dirname),
   aliases: ['mimick'],
   permissions: ['SEND_MESSAGES'],
+  timeout: 1000,
 
   execute(msg, args) {
+    msg.delete({timeout: 250})
     if (!args[0]) return msg.channel.send(`Seems like you didn't really want me to say something lol`)
     msg.channel.send(
       Utils.createEmbed(
@@ -15,7 +17,7 @@ module.exports = {
           [
             `${msg.author.username} said:`, `\`\`\`` + msg.content.slice(msg.content.split(" ")[0].length + 1) + `\`\`\``
           ]
-        ], { color: botRoleColor(msg.guild.me) }
+        ], { color: Utils.botRoleColor(msg.guild.me) }
       )
     );
   },

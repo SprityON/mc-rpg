@@ -7,28 +7,28 @@ module.exports = {
   usage: Utils.getCmdUsage(__filename, __dirname),
   aliases: ['inv'],
   permissions: ['SEND_MESSAGES'],
+  timeout: 1000,
 
   async execute(msg, args) {
       const page = Math.floor(args[1]);
 
-      Utils.embedInventoryList({
+      let filter;
+      if (isNaN(args[1])) {
+        filter = args[1];
+      }
+
+    Utils.embedInventoryList({
         member: msg.member,
         currPage: page,
-        showAmountOfItems: 5
-      }, ([success, message]) => {
-        if (success) {
-          // if success = true then message = embed
-          msg.channel.send(message);
-        } else {
-          // if success = false then message = error message
-          msg.channel.send(message);
-        };
-      });
+        showAmountOfItems: 5,
+        filter: filter
+    }, data => msg.inlineReply(data))
   },
 
   help: {
     title: 'Inventory',
-    description: `View your inventory!`,
+    description: `View your inventory! To filter , use \`${Utils.getCmdUsage(__filename, __dirname)} tools\`\
+     or \`${Utils.getCmdUsage(__filename, __dirname)} items\``,
     enabled: true
   }
 }
