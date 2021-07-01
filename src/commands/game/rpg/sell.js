@@ -21,6 +21,7 @@ module.exports = {
 
       let item_id
       let amount
+      let inventory = JSON.parse(data[0][0].inventory)
 
       if (args[0] == 'all') {
         amount = args[0];
@@ -52,40 +53,67 @@ module.exports = {
           ], { status: 'error' }
         ))
 
-        if (!item.mineable) return msg.inlineReply(Utils.createEmbed(
+        if (item.category == 'tools') return msg.inlineReply(Utils.createEmbed(
           [
             [`ERROR`, `That is a tool! Break this tool with  \`rpg break <tool_id>\`\nAfter breaking, you will be given some portion of its materials.`]
           ], { status: 'error' }
         ))
       } else {
         let text = ''
+        item = allJSON.find(item => item.id === item_id)
+
+        if (!item && args[1]) return msg.inlineReply(Utils.createEmbed(
+          [
+            [`ITEM NOT FOUND`, `That item does not exist!`]
+          ], { status: 'error' }
+        ))
+
+        if (args[1] && !item.mineable) return msg.inlineReply(Utils.createEmbed(
+          [
+            [`ERROR`, `That is a tool! Break this tool with  \`rpg break <tool_id>\`\nAfter breaking, you will be given some portion of its materials.`]
+          ], { status: 'error' }
+        ))
+
+        if (inventory[1].items.length <= 0) return msg.inlineReply(`You do not have any items in your inventory!`)
+
         if (item_id) { text += `${item.name}` }
         else text += `your items`
         msg.inlineReply(`Are you sure you want to delete all ${text}? (y/n)`)
 
-        let Continue = true
+        let Continue = false
         let filter = m => m.author.id === msg.author.id
         await msg.channel.awaitMessages(filter, { time: 30000, max: 1 })
         .then(collected => {
-          if (collected.first().content.toLowerCase() === 'n') Continue = false
+          if (collected.first().content.toLowerCase() === 'y') Continue = true
         })
 
         if (!Continue) return msg.inlineReply(`Cancelled!`);
       }
 
-      let inventory = JSON.parse(data[0][0].inventory)
-
       if (amount == 'all') {
-        for (let i = 0; i < inventory[1].items.length;) {
-          let foundItem = inventory[1].items[i]
+        if (item_id) {
+          let foundItem = inventory[1].items.find(item => Object.keys(item)[0])
+          console.log(foundItem)
 
-          let item = allJSON.find(item => item.id === Object.keys(foundItem)[0])
+          if (Object.keys(foundItem)[0] === item_id) {
+            let item = allJSON.find(item => item.id === item_id)
 
-          let foundItemAmount = Object.values(foundItem)
-          let receivedCurrency = item.sellPrice * foundItemAmount
+            let receivedCurrency = item.sellPrice * Object.values(foundItem)
 
-          inventory[0]['emerald'] += receivedCurrency
-          inventory[1].items.splice(0,1)
+            inventory[0]['emerald'] += receivedCurrency
+            inventory[1].items.splice(0, 1)
+          }
+        } else {
+          for (let i = 0; i < inventory[1].items.length;) {
+            let foundItem = inventory[1].items[i]
+            let item = allJSON.find(item => item.id === Object.keys(foundItem)[0])
+
+            let foundItemAmount = Object.values(foundItem)
+            let receivedCurrency = item.sellPrice * foundItemAmount
+
+            inventory[0]['emerald'] += receivedCurrency
+            inventory[1].items.splice(0, 1)
+          }
         }
       } else {
         let receivedCurrency = item.sellPrice * amount
@@ -112,33 +140,47 @@ module.exports = {
               ], { status: 'error' }
             ))
 
+            if (inventory[1].items[i][item_id] <= 0) { 
+              inventory[1].items.splice(i,1)
+
+              return msg.inlineReply(Utils.createEmbed(
+              [
+                [`ERROR`, `You do not have that item!`]
+              ], { status: 'error' }
+            ))
+            }
+
             inventory[0]['emerald'] += receivedCurrency
             inventory[1].items[i][item_id] -= amount
-            break
+
+            break 
           }
         }
-      }
 
-      Utils.query(`UPDATE members SET inventory = '${JSON.stringify(inventory)}' WHERE member_id = ${msg.member.id}`)
+        if (!itemName) return msg.inlineReply(Utils.createEmbed(
+          [
+            [`ERROR`, `You do not have that item!`]
+          ], { status: 'error' }
+        ))
+      }
 
       let emote_emerald = BotClass.client.emojis.cache.find(e => e.name === 'emerald')
 
-      let emeraldAmount = inventory[0]['emerald']
-      if (emeraldAmount !== 0) {
-        if (emeraldAmount < 0.1) { emeraldAmount = emeraldAmount.toFixed(3) } else
-        if (emeraldAmount < 1) { emeraldAmount = emeraldAmount.toFixed(2) } else
-        if (emeraldAmount < 10) emeraldAmount = emeraldAmount.toFixed(1)
-      }
+      const emeraldAmount = Utils.emeraldAmount(inventory[0]['emerald'])
 
       if (amount == 'all') {
+        let alt_text = 'Sold ALL ITEMS'
+        if (item_id) alt_text = `Sold ${amount} ${item.name}` 
         msg.inlineReply(Utils.createEmbed(
-          [], { description: `Sold **ALL ITEMS**\nYou now have ${emote_emerald} ${emeraldAmount} Emeralds` }
+          [], { title: `${alt_text}`, description: `You now have ${emote_emerald} ${emeraldAmount} Emeralds` }
         ))
       } else {
         msg.inlineReply(Utils.createEmbed(
-          [], { description: `Sold **${amount} ${itemName}**\nYou now have ${emote_emerald} ${emeraldAmount} Emeralds` }
+          [], { title: `Sold ${amount} ${item.name}`, description: `You now have ${emote_emerald} ${emeraldAmount} Emeralds` }
         ))
       }
+
+      Utils.query(`UPDATE members SET inventory = '${JSON.stringify(inventory)}' WHERE member_id = ${msg.member.id}`)
     })
   },
 

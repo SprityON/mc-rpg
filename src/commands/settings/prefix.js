@@ -27,7 +27,7 @@ module.exports = {
       .then(collected => {
         if (collected.first().content.toLowerCase() === 'y') {
 
-          Utils.query(`UPDATE guilds SET prefix = '${newPrefix}' WHERE guild_id = '${msg.guild.id}'`).then(
+          Utils.query(`UPDATE guilds SET prefix = ? WHERE guild_id = '${msg.guild.id}'`, [newPrefix]).then(
             msg.channel.send(
               Utils.createEmbed(
                 [
@@ -44,7 +44,7 @@ module.exports = {
 
   help: {
     enabled: true,
-    title: '',
-    description: ``
+    title: 'Prefix',
+    description: `Change your prefix to whatever you want!`
   }
 }

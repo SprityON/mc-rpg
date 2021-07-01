@@ -18,15 +18,15 @@ module.exports = {
           cmd = cmd[1]
 
           if (cmd.name === command || cmd.aliases.includes(command)) {
-            let cmdFile = require(`../commands/${cmd.category}/${cmd.name}`);
+            const cmdFile = require(`../commands/${cmd.category}/${cmd.name}`);
 
-            let files = Utils.modules.fs.readdirSync(`./commands/${cmd.category}`)
+            const files = Utils.modules.fs.readdirSync(`./commands/${cmd.category}`)
             
             if (files.find(file => !file.endsWith('.js')) && cmdFile.handler) return cmdFile.execute(msg, args)
 
             Utils.commandCooldown.execute(msg.member, cmdFile).then(([onCooldown, seconds]) => {
               if (onCooldown) {
-                return msg.inlineReply(`You have to wait ${seconds} seconds before this command again!`);
+                return msg.inlineReply(`You have to wait ${seconds} seconds before using this command again!`);
               }
 
               let enoughPermissions = true;

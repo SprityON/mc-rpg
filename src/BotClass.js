@@ -36,13 +36,13 @@ module.exports = new class BotClass {
 				.createEmbed(
 				[
 					['Thanks for adding me to your server!', 'Want to change some settings? Use `mc!help`']
-				], { color: Utils.botRoleColor() }
+				], { color: Utils.botRoleColor(guild) }
 				))
-
+				
 			return Utils.query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
 	}
 
 	guildDelete(guild) {
-		query(`DELETE FROM guilds WHERE guild_id = ${guild.id}`);
+		Utils.query(`DELETE FROM guilds WHERE guild_id = ${guild.id}`);
 	}
 }

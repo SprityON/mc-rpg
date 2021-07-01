@@ -17,7 +17,7 @@ module.exports = {
           [
             `${msg.author.username} said:`, `\`\`\`` + msg.content.slice(msg.content.split(" ")[0].length + 1) + `\`\`\``
           ]
-        ], { color: Utils.botRoleColor(msg.guild.me) }
+        ], { color: Utils.randomColor() }
       )
     );
   },

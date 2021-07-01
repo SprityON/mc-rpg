@@ -30,9 +30,8 @@ module.exports = {
   },
 
   help: {
-    enabled: false,
-    title: '',
-    description: ``,
-    permissions: ['SEND_MESSAGES']
+    enabled: true,
+    title: 'Delete MCRPG Account',
+    description: `Delete your MCRPG account. Beware: your account can not be restored!`
   }
 }

@@ -39,23 +39,36 @@ module.exports = class Utils {
   /* DB METHODS */
 
   static dbConnect() {
-    return require('mysql').createConnection({
+    return require('mysql').createPool({
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: "mc_rpg",
-      connectTimeout: 30000
+      debug: false
     })
   }
 
-  static async query(sql, callback) {
-    let con = require('./Utils').dbConnect();
-    let scnd_arg = arguments[1];
+  static async query(sql, bindings, callback) {
+    const pool = require('./Utils').dbConnect();
+    let usingCallback = arguments[1];
+    
+    if (Array.isArray(bindings)) {
+      usingCallback = arguments[2]
+    } else { callback = bindings; bindings = [] }
 
-      con.query(sql, function (err, result, fields) {
-      if (scnd_arg) {
-        callback([result, fields, err]);
-      } else { if (err) throw err }
+    pool.getConnection((err, conn) => {
+      if (err) {
+        console.error(`Query Error`, err);
+      } else {
+        conn.query(sql, bindings, function (err, result, fields) {
+          if (err) throw err
+          if (usingCallback) {
+            callback([result, fields, err]);
+          }
+        })
+
+        conn.release();
+      }
     })
   }
 
@@ -74,7 +87,7 @@ module.exports = class Utils {
     description: '',
     color: '',
     status: '',
-    thumbnail,
+    thumbnail: '',
     footer: false,
     setFooter: ''
   }) {
@@ -89,28 +102,25 @@ module.exports = class Utils {
       { 'success': '00ff00' }
     ];  
 
-    if (settings.setFooter) embed.setFooter(settings.setFooter)
-    if (settings.title) embed.setTitle(settings.title) 
-    if (settings.description) embed.setDescription(settings.description)
-    if (settings.color) embed.setColor(settings.color) 
-    if (settings.status) {
-
-      let embedColor;
-      for (const color of colors) 
-        if (settings.status.includes(Object.keys(color))) embedColor = Object.values(color).toString();
-
-      embedColor
-      ? embed.setColor(embedColor)
-      : embed.setColor(Utils.botRoleColor())
-    }
-    if (settings.thumbnail) {
-      embed.setThumbnail()
-    }
-    if (settings.footer == true) embed.setFooter('For more information, please use the help command');
-    if (!fields[0] || fields[0].length == 0) {
-      if (settings.title || settings.description) 
-        return embed
-      throw new Error("Embed needs to have at least a title, description or two fields.")
+    if (settings) {
+      if (settings.setFooter) embed.setFooter(settings.setFooter)
+      if (settings.title) embed.setTitle(settings.title) 
+      if (settings.description) embed.setDescription(settings.description)
+      if (settings.color) embed.setColor(settings.color) 
+      if (settings.status) {
+        for (const color of colors) 
+          if (settings.status.includes(Object.keys(color))) 
+            embed.setColor(Object.values(color).toString());
+      }
+      if (settings.thumbnail) {
+        embed.setThumbnail()
+      }
+      if (settings.footer == true) embed.setFooter('For more information, please use the help command');
+      if (!fields[0] || fields[0].length == 0) {
+        if (settings.title || settings.description)
+          return embed
+        throw new Error("Embed needs to have at least a title, description or two fields.")
+      }
     }
 
     for (let i = 0; i < fields.length; i++) {
@@ -185,6 +195,15 @@ module.exports = class Utils {
     return cmdUsage;
   }
 
+  static emeraldAmount(emeralds) {
+    if (emeralds !== 0) {
+      if (emeralds < 0.1) { emeralds = emeralds.toFixed(3) } else
+      if (emeralds < 10) { emeralds = emeralds.toFixed(2) } else 
+      if (emeralds < 1000) { emeralds = emeralds.toFixed(1) } else emeralds = emeralds.toFixed(0)
+    }
+    return emeralds
+  }
+
   static embedInventoryList({
     member,
     currPage,
@@ -196,12 +215,7 @@ module.exports = class Utils {
     Utils.query(`SELECT * FROM members WHERE member_id = ${member.id}`, async result => {
       const inventory = JSON.parse(result[0][0].inventory);
 
-      let emeraldAmount = inventory[0]['emerald']
-      if (emeraldAmount !== 0) {
-        if (emeraldAmount < 0.1) { emeraldAmount = emeraldAmount.toFixed(3) } else
-        if (emeraldAmount < 1) { emeraldAmount = emeraldAmount.toFixed(2) } else 
-        if (emeraldAmount < 10) emeraldAmount = emeraldAmount.toFixed(1)
-      } 
+      let emeraldAmount = Utils.emeraldAmount(inventory[0]['emerald'])
 
       const BotClass = require('./BotClass');
 
@@ -218,8 +232,8 @@ module.exports = class Utils {
 
       let emeraldEmote = BotClass.client.emojis.cache.find(e => e.name === 'emerald');
       let embed = new BotClass.Discord.MessageEmbed()
-        .setColor(Utils.botRoleColor())
-        .setDescription(`**𝗜𝗡𝗩𝗘𝗡𝗧𝗢𝗥𝗬 ───────── ${emeraldEmote} ${emeraldAmount}**`)
+        .setColor(process.env.EMBEDCOLOR)
+        .setDescription(`**𝗜𝗡𝗩𝗘𝗡𝗧𝗢𝗥𝗬 ───────────── ${emeraldEmote} ${emeraldAmount}**`)
 
       // if the currentpage (which the user chooses) is higher then 1, then in the i var, multiply the currpage by the amount of items and - the amount of items 
       // say for example a user wants to see page 3 with 5 items:
@@ -243,7 +257,7 @@ module.exports = class Utils {
 
       let allJSON = listJSON;
 
-      if (filter) {
+      if (filter && isNaN(filter)) {
         try {
           allJSON = Array.from(require(`./commands/game/rpg/${filter}/${filter}.json`));
         } catch (error) {
@@ -254,29 +268,26 @@ module.exports = class Utils {
       let item = inventory.splice(1, 2)[0]
 
       let foundItems = []
-
-      if (filter) {
         
-        if (filter == 'tools') {
+      if (filter == 'tools') {
 
-          for (let i of allJSON) {
+        for (let i of allJSON) {
 
-            for (let o of item.tools) {
-              if (i.id === Object.keys(o)[0]) {
-                foundItems.push({ id: i.id, name: i.name, amount: Object.values(o)[0] })
-              }
+          for (let o of item.tools) {
+            if (i.id === Object.keys(o)[0]) {
+              foundItems.push({ id: i.id, name: i.name, amount: Object.values(o)[0] })
             }
           }
-        } 
+        }
+      } 
 
-        else if (filter == 'items') {
+      else if (filter == 'items') {
 
-          for (let i of allJSON) {
+        for (let i of allJSON) {
 
-            for (let o of item.items) {
-              if (i.id === Object.keys(o)[0]) {
-                foundItems.push({ id: i.id, name: i.name, amount: Object.values(o)[0] })
-              }
+          for (let o of item.items) {
+            if (i.id === Object.keys(o)[0]) {
+              foundItems.push({ id: i.id, name: i.name, amount: Object.values(o)[0] })
             }
           }
         }
@@ -293,26 +304,38 @@ module.exports = class Utils {
         }
       }
 
+      if (!foundItems || foundItems.length < 1) callback(Utils.createEmbed(
+        [
+          [`INVENTORY EMPTY`, `You do not have any ${filter} in your inventory!`]
+        ], { status: 'error' }
+      ))
+
+      let totalItemsAmountIndividual = 0
+      let Continue = true
       if (foundItems) {
         for (let foundItem of foundItems) {
           totalItemsAmount++
+          totalItemsAmountIndividual += foundItem.amount
 
-          let emote = BotClass.client.emojis.cache.find(e => e.name === foundItem.id);
+          if (Continue == true) {
+            let emote = BotClass.client.emojis.cache.find(e => e.name === foundItem.id);
 
-          /* testI will check if this variable is the same as i
-          *  if it is not the same, then the user wants to see another page
-          *  so it will increment until it coincides with the page that the user wants
-          * (example of usage: mc?rpg inv 2) where 2 is the page that the user wants */
-          if (testI !== i) { testI++ } else {
-            pageItemsAmount++
+            /* testI will check if this variable is the same as i
+            *  if it is not the same, then the user wants to see another page
+            *  so it will increment until it coincides with the page that the user wants
+            * (example of usage: mc?rpg inv 2) where 2 is the page that the user wants */
+            if (testI !== i) { testI++ } else {
+              pageItemsAmount++
 
-            if (pageItemsAmount > showAmountOfItems) break;
+              if (pageItemsAmount > showAmountOfItems) { Continue = false; continue; }
 
-            text += `${emote} **${foundItem.name} ▬** ${foundItem.amount}\n\
+              text += `${emote} **${foundItem.name} ▬** ${foundItem.amount}\n\
           *ID* \`${foundItem.id}\`\n\n`
 
-            testI++
-            i++
+              testI++
+              i++
+              
+            }
           }
         }
       }
@@ -331,8 +354,8 @@ module.exports = class Utils {
         }
       }
 
-      embed.addField(`${totalItemsAmount} items total`, text)
-        .setFooter(`Filtering: rpg inventory <tools/items> | Page ${currPage} of ${lastPage}`)
+      embed.addField(`${totalItemsAmountIndividual} items total`, text)
+        .setFooter(`Filtering: rpg inventory (tools/items) | Page ${currPage} of ${lastPage}`)
 
       callback(embed)
     })

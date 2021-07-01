@@ -9,20 +9,20 @@ module.exports = {
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
 
-  async execute(msg, args) {
-      const page = Math.floor(args[1]);
-
+  execute(msg, args) {
+      let page;
       let filter;
-      if (isNaN(args[1])) {
-        filter = args[1];
-      }
+
+      isNaN(args[0])
+        ? (filter = args[0], page = Math.floor(args[1]))
+        : (filter = args[1], page = Math.floor(args[0]))
 
     Utils.embedInventoryList({
         member: msg.member,
         currPage: page,
         showAmountOfItems: 5,
         filter: filter
-    }, data => msg.inlineReply(data))
+    }, message => msg.inlineReply(message))
   },
 
   help: {

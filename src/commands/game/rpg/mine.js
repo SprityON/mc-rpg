@@ -12,31 +12,32 @@ module.exports = {
   async execute(msg, args) {
     await Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, data => {
       const embedColor = '#b8b8b8';
+      const RPG_name = data[0][0].rpg_name
 
-      if (!data[0][0].equipped) return msg.inlineReply(Utils.createEmbed(
+      if (!data[0][0].mining_item) return msg.inlineReply(Utils.createEmbed(
         [
           [`NO PICKAXE EQUIPPED`, `Buy or equip a pickaxe to be able to mine.`]
         ], { color: embedColor }
       ))
 
-      const pickaxe = data[0][0].equipped
+      const pickaxe = data[0][0].mining_item
       const emote_pickaxe = BotClass.client.emojis.cache.find(e => e.name === pickaxe);
 
       let mined = [];
 
       let itemJSON = require('./items/items.json');
 
-      let rarity = [
+      const rarity = [
         { "rarity": "common",     "chance": 8500, amountMultiplier: 1 },
         { "rarity": "uncommon",   "chance": 6000, amountMultiplier: 0.7 },
         { "rarity": "rare",       "chance": 2500, amountMultiplier: 0.4 },
         { "rarity": "very rare",  "chance": 1000, amountMultiplier: 0.3 },
-        { "rarity": "epic",       "chance": 300,  amountMultiplier: 0.2 },
+        { "rarity": "epic",       "chance": 300,  amountMultiplier: 0.3 },
         { "rarity": "legendary",  "chance": 25,   amountMultiplier: 0.1 },
       ]
 
       for (let item of itemJSON) {
-        if (item.mineable) {
+        if (item.mineable && !item.category) {
 
           for (let r of rarity) {
 
@@ -69,11 +70,11 @@ module.exports = {
       if (mined.length == 0 || !mined) return msg.inlineReply(Utils.createEmbed(
         [
           ['AWW MAN...', `You got nothing!`]
-        ], { description: `${emote_pickaxe} **${msg.author.username}** went mining`, color: embedColor }
+        ], { description: `${emote_pickaxe} **${RPG_name}** went mining`, color: embedColor }
       ))
 
       let embed = new BotClass.Discord.MessageEmbed()
-        .setDescription(`${emote_pickaxe} **${msg.author.username}** went mining`)
+        .setDescription(`${emote_pickaxe} **${RPG_name}** went mining`)
         .setColor(embedColor)
 
       let embedReceivedItemsText = '';
@@ -96,7 +97,7 @@ module.exports = {
       for (let res of notMined) {
         let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
 
-        notMined.length <= 1 | i == notMined.length - 1
+        notMined.length - 1 <= 1 | i == notMined.length - 1
           ? embedTriedMiningFailed += `${emote} **${res.amount}**`
           : embedTriedMiningFailed += `${emote} **${res.amount}**, `
 
@@ -146,7 +147,7 @@ module.exports = {
 
   help: {
     enabled: true,
-    title: 'MINING AWAY',
-    description: `Mining is essential to upgrade one's own gear.`
+    title: '(MINING AWAY)[https://www.youtube.com/watch?v=dgha9S39Y6M]',
+    description: `Mining is essential to upgrade one's own gear.\nThe rarer the item, the lesser you get!`
   }
 }

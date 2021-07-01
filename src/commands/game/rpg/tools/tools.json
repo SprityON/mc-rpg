@@ -2,11 +2,110 @@
 	{
 		"id": "fists",
 		"name": "Fists",
-		"description": "My fists are strong like blocks.",
+		"description": "These uhh.. are my uhh... fists! Yeah.. My fists.",
 		"craftable": true,
+
+		"usedFor": ["lumber", "combat"],
+		"amountMultiplier": 0.2,
+		
+		"combat": {
+			"damageMultiplier": 0.2,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 1.4
+		}
+	},
+
+	{
+		"id": "wooden_axe",
+		"name": "Wooden Axe",
+		"description": "You can do some lumber with this one! Oh and you can fight with it.",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2,
+				"wooden_planks": 3
+			}
+		],
+
+		"usedFor": ["lumber", "combat"],
+		"craftable": true,
+		"amountMultiplier": 0.4,
+		
+		"combat": {
+			"damageMultiplier": 0.5,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 0.4
+		}
+	},
+
+	{
+		"id": "stone_axe",
+		"name": "Stone Axe",
+		"description": "Your regular Stone axe.",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2,
+				"cobblestone": 3
+			}
+		],
+
+		"usedFor": ["lumber", "combat"],
+		"craftable": true,
+		"amountMultiplier": 0.6, 
 		
 		"combat": {
 			"damageMultiplier": 0.6,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 0.5
+		}
+	},
+
+	{
+		"id": "iron_axe",
+		"name": "Iron Axe",
+		"description": "Better then the Stone Axe, of course.",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2,
+				"iron_ingot": 3
+			}
+		],
+
+		"usedFor": ["lumber", "combat"],
+		"craftable": true,
+		"amountMultiplier": 0.8, 
+		
+		"combat": {
+			"damageMultiplier": 0.7,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 0.6
+		}
+	},
+
+	{
+		"id": "golden_axe",
+		"name": "Golden Axe",
+		"description": "Has great speed, but it surely lacks durability.",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2,
+				"golden_ingot": 3
+			}
+		],
+
+		"usedFor": ["lumber", "combat"],
+		"craftable": true,
+		"amountMultiplier": 0.9, 
+		
+		"combat": {
+			"damageMultiplier": 0.8,
 			"armorMultiplier":  1,
 			"healthMultiplier": 1,
 			"speedMultiplier": 1
@@ -14,16 +113,42 @@
 	},
 
 	{
+		"id": "diamond_axe",
+		"name": "Diamond Axe",
+		"description": "The perfect Axe. It is also very shiny!",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2,
+				"diamond": 3
+			}
+		],
+
+		"usedFor": ["lumber", "combat"],
+		"craftable": true,
+		"amountMultiplier": 1, 
+		
+		"combat": {
+			"damageMultiplier": 1,
+			"armorMultiplier":  1,
+			"healthMultiplier": 1,
+			"speedMultiplier": 0.9
+		}
+	},
+
+	{
 		"id": "wooden_sword",
 		"name": "Wooden Sword",
 		"description": "Slightly stronger then your fists.",
+		"category": "tools",
 		"recipe": [
 			{
 				"stick": 2,
 				"wooden_planks": 3
 			}
 		],
-		"category": ["combat"],
+
+		"usedFor": ["combat"],
 		"craftable": true,
 		
 		"combat": {
@@ -35,41 +160,80 @@
 	},
 
 	{
-		"id": "wooden_axe",
-		"name": "Wooden Axe",
-		"description": "You can do some lumber with this one! Oh and you can fight with it.",
-		"recipe": [
-			{
-				"stick": 2,
-				"wooden_planks": 3
-			}
-		],
-		"category": ["lumber", "combat"],
-		"craftable": true,
-		
-		"combat": {
-			"damageMultiplier": 1,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1,
-			"speedMultiplier": 0.9
-		}
-	},
-
-	{
 		"id": "wooden_pickaxe",
 		"name": "Wooden Pickaxe",
 		"description": "You can do some lumber with this one! Oh and you can attack.",
+		"category": "tools",
 		"recipe": [
 			{ "stick": 2 }, 
 			{ "wooden_planks": 3 }
 		],
-		"category": "mining",
-		"craftable": true,
-		
-		"combat": {
-			"damageMultiplier": 0.8,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1
-		}
+
+		"usedFor": ["mining"],
+		"craftable": true
+	},
+
+	{
+		"id": "stone_pickaxe",
+		"name": "Stone Pickaxe",
+		"description": "A pickaxe made out of stone.",
+		"category": "tools",
+		"recipe": [
+			{ "stick": 2 },
+			{ "cobblestone": 3 }
+		],
+		"usedFor": ["mining"],
+		"craftable": true
+	},
+
+	{
+		"id": "iron_pickaxe",
+		"name": "Iron Pickaxe",
+		"description": "Much better then the Stone Pickaxe!",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2
+			},
+			{
+				"iron_ingot": 3
+			}
+		],
+		"usedFor": ["mining"],
+		"craftable": true
+	},
+	
+	{
+		"id": "golden_pickaxe",
+		"name": "Golden Pickaxe",
+		"description": "Sure looks rich-ish and stuff, but just really useless.",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2
+			},
+			{
+				"gold_ingot": 3
+			}
+		],
+		"usedFor": ["mining"],
+		"craftable": true
+	},
+
+	{
+		"id": "diamond_pickaxe",
+		"name": "Diamond Pickaxe",
+		"description": "A pickaxe made out of diamonds!",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 2
+			},
+			{
+				"diamond": 3
+			}
+		],		
+		"usedFor": ["mining"],
+		"craftable": true
 	}
 ]
