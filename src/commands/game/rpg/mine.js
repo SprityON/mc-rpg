@@ -104,11 +104,14 @@ module.exports = {
         i++
       }
 
+      //console.log(newInventory[1].tools)
       i = 1
+      let broken_pickaxe_text = ''
       mined.forEach(res => {
         let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
         
         if (res.mined === true) {
+          console.log(mined.length)
           if (mined.length <= 1 || i == mined.length) {
             embedReceivedItemsText += `${emote} **${res.amount}**`
           } else {
@@ -128,32 +131,30 @@ module.exports = {
 
               if (Object.keys(newInventory[1].items[f])[0] == res.id) {
                 for (let ii = 0; ii < inventory[1].tools.length; ii++) {
-                  if (inventory[1].tools[ii][pickaxe.id] && inventory[1].tools[ii].code === pickaxe.code) {
+                  if (inventory[1].tools[ii][pickaxe.id] && inventory[1].tools[ii].code == pickaxe.code) {
                     newInventory[1].tools[ii].currentDurability -= res.amount
 
                     if (newInventory[1].tools[ii].currentDurability < 0) {
-                      embedReceivedItemsText += `\n\nYour ${emote_pickaxe} Pickaxe broke!`
-                      data[0][0].lumbering_item = `{"id": "fists"}`
+                      broken_pickaxe_text += `\n\nYour ${emote_pickaxe} Pickaxe broke!`
+                      data[0][0].mining_item = ``
                       return newInventory[1].tools.splice(ii, 1)
                     }
                   }
-
-                  ii++
                 }
               }
-               return newInventory[1].items[f][res.id] += res.amount
+              newInventory[1].items[f][res.id] += res.amount
             }
-          } else return newInventory[1].items.push({ [res.id]: res.amount })
+          } else return newInventory[1].items.push({ [res.id]: res.amount });
         }
       })
       
       embedTriedMiningFailed.length > 0
-        ? embed.addField(`YOU GOT`, `${embedReceivedItemsText}\n\nYou tried mining ${embedTriedMiningFailed} but couldn't!\nTry upgrading your pickaxe.`)
-        : embed.addField(`YOU GOT`, `${embedReceivedItemsText}`)
+        ? embed.addField(`YOU GOT`, `${embedReceivedItemsText}\n\nYou tried mining ${embedTriedMiningFailed} but couldn't!\nTry upgrading your pickaxe.${broken_pickaxe_text}`)
+        : embed.addField(`YOU GOT`, `${embedReceivedItemsText}${broken_pickaxe_text}`)
       
       // [{ "emerald": 0}, {"tools": [{"fists": 1}], "items": [{"cobblestone": 1}] }]
 
-      Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}' WHERE member_id = ${msg.member.id}`);
+      Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', mining_item = '${data[0][0].mining_item}' WHERE member_id = ${msg.member.id}`);
       msg.channel.send(embed)
     })
   },
