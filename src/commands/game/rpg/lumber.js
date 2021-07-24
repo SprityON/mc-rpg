@@ -69,6 +69,7 @@ module.exports = {
       let newInventory = [...inventory];
 
       i = 1
+      let broken_axe_text = ''
       lumbered.forEach(res => {
         let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
 
@@ -94,7 +95,7 @@ module.exports = {
                     newInventory[1].tools[ii].currentDurability -= res.amount
 
                     if (newInventory[1].tools[ii].currentDurability < 0) {
-                      embedReceivedItemsText += `\n\nYour ${emote_axe} Axe broke!`
+                      broken_axe_text += `\n\nYour ${emote_axe} Axe broke!`
                       data[0][0].lumbering_item = `{"id": "fists"}`
                       return newInventory[1].tools.splice(ii, 1)
                     }
@@ -102,14 +103,16 @@ module.exports = {
 
                   ii++
                 }
-                return newInventory[1].items[f][res.id] += res.amount
+
+                if (newInventory[1].items[f][res.id])
+                  newInventory[1].items[f][res.id] += res.amount
               }
             }
           } else return newInventory[1].items.push({ [res.id]: res.amount })
         }
       })
 
-      embed.addField(`YOU GOT`, `${embedReceivedItemsText}`)
+      embed.addField(`YOU GOT`, `${embedReceivedItemsText}${broken_axe_text}`)
 
       Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}' WHERE member_id = ${msg.member.id}`);
       msg.channel.send(embed)
