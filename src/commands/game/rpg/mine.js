@@ -104,14 +104,12 @@ module.exports = {
         i++
       }
 
-      //console.log(newInventory[1].tools)
       i = 1
       let broken_pickaxe_text = ''
       mined.forEach(res => {
         let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
         
         if (res.mined === true) {
-          console.log(mined.length)
           if (mined.length <= 1 || i == mined.length) {
             embedReceivedItemsText += `${emote} **${res.amount}**`
           } else {
@@ -142,7 +140,9 @@ module.exports = {
                   }
                 }
               }
-              newInventory[1].items[f][res.id] += res.amount
+
+              if (newInventory[1].items[f][res.id])
+                newInventory[1].items[f][res.id] += res.amount
             }
           } else return newInventory[1].items.push({ [res.id]: res.amount });
         }

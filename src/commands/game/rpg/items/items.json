@@ -155,7 +155,7 @@
 		"craftable": false,
 		"breakable": false,
 		"category": "item",
-		"rarity": "rare",
+		"rarity": "very rare",
 		"mineableWith": [
 			"iron_pickaxe",
 			"diamond_pickaxe",
@@ -172,7 +172,7 @@
 		"craftable": false,
 		"breakable": false,
 		"category": "item",
-		"rarity": "rare",
+		"rarity": "very rare",
 		"mineableWith": [
 			"stone_pickaxe",
 			"iron_pickaxe",
