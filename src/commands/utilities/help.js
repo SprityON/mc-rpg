@@ -10,10 +10,18 @@ module.exports = {
   timeout: 1000,
 
   execute(msg, args) {
-    if (args.length < 1) {
+    if (!args[1]) {
+      let embed = new BotClass.Discord.MessageEmbed()
+      let text = ''
+      let i = 0
       BotClass.Commands.forEach(cmd => {
         console.log(cmd.name)
+
+        i == BotClass.Commands.length
+        ? text += `\`${cmd.name}\``
+        : text += `\`${cmd.name}\`, `
       })
+      embed.addField(`All Commands`, `${text}`)
     }
   },
 
