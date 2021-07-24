@@ -1,0 +1,30 @@
+[
+	{
+		"category": "fun",
+		"description": "Are you lacking fun? Then try out one of these!",
+		"title": "Fun",
+		"emote": ":game_die:",
+		"usage": "help fun"
+	},
+	{
+		"category": "utils",
+		"description": "A few extra handy stuff.",
+		"title": "Utility",
+		"emote": ":hammer_pick:",
+		"usage": "help utils"
+	},
+	{
+		"category": "settings",
+		"description": "Wanting to disable something? Change settings here!",
+		"title": "Settings",
+		"emote": ":gear:",
+		"usage": "help settings"
+	},
+	{
+		"category": "game",
+		"description": "Start your Discord Minecraft adventure!",
+		"title": "Game",
+		"emote": "grass_block",
+		"usage": "help game"
+	}
+]
