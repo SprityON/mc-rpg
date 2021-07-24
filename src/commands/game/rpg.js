@@ -22,13 +22,11 @@ module.exports = {
       if (!args[0]) return msg.channel.send(
         Utils.createEmbed(
         [
-          [`ERROR`,
-            `That is not a command!\n\
-            Use \`${prefix}help\` for more information`]
+          [`ERROR`, `That is not a command!`]
         ], { status: 'error' }
       ))
 
-      let command = args[0]
+      let command = args[0].toLowerCase()
 
       try {
         const files = Utils.modules.fs.readdirSync(`${__dirname}/rpg`).filter(file => file.endsWith('.js'));

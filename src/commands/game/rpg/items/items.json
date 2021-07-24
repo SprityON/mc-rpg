@@ -5,6 +5,10 @@
 		"description": "A regular log.",
 		"sellPrice": 0.001,
 		"canLumber": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
+		"craftedAmount": 1,
 		"rarity": "common"
 	},
 	
@@ -14,6 +18,9 @@
 		"description": "Well, at least it supports our ecosystem.",
 		"sellPrice": 0.00025,
 		"canLumber": false,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"neededEnchantment": ["silk_touch"],
 		"rarity": "common"
 	},
@@ -24,6 +31,9 @@
 		"description": "My my, delicous!",
 		"sellPrice": 0.00050,
 		"canLumber": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "very rare"
 	},
 	
@@ -31,12 +41,30 @@
 		"id": "stick",
 		"name": "Stick",
 		"description": "A stick.",
-		"sellPrice": 0.00025,
+		"sellPrice": 0.0000625,
 		"canLumber": true,
 		"craftable": true,
+		"breakable": false,
+		"category": "item",
 		"rarity": "very rare",
+		"craftedAmount": 4,
 		"recipe": [
 			{ "wooden_planks": 2 }
+		]
+	},
+
+	{
+		"id": "wooden_planks",
+		"name": "Wooden Planks",
+		"description": "Wood.",
+		"sellPrice": 0.00025,
+		"mineable": false,
+		"breakable": false,
+		"category": "item",
+		"craftable": true,
+		"craftedAmount": 4,
+		"recipe": [
+			{ "log": 1 }
 		]
 	},
 	
@@ -46,6 +74,9 @@
 		"description": "Some cobblestone.",
 		"sellPrice": 0.001,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "common",
 		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -56,6 +87,9 @@
 		"description": "Grey colored stone which can be sold.",
 		"sellPrice": 0.002,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "uncommon",
 		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -66,6 +100,9 @@
 		"description": "White colored stone which can be sold.",
 		"sellPrice": 0.002,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "uncommon",
 		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -76,6 +113,9 @@
 		"description": "A pretty useless block I must say.",
 		"sellPrice": 0.002,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "uncommon",
 		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -86,6 +126,9 @@
 		"description": "A pretty messy red block... ",
 		"sellPrice": 0.002,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "uncommon",
 		"mineableWith": ["wooden_pickaxe", "stone_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -96,6 +139,9 @@
 		"description": "Useful for certain shop items.",
 		"sellPrice": 0.005,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "rare",
 		"mineableWith": ["golden_pickaxe", "iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -106,6 +152,9 @@
 		"description": "With Golden Ingots you can make Golden Apples!",
 		"sellPrice": 0.005,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "rare",
 		"mineableWith": [
 			"iron_pickaxe",
@@ -120,6 +169,9 @@
 		"description": "A great starting ore!",
 		"sellPrice": 0.005,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "rare",
 		"mineableWith": [
 			"stone_pickaxe",
@@ -135,8 +187,12 @@
 		"description": "Craft a Golden Apple with this block!",
 		"sellPrice": 0.045,
 		"mineable": false,
+		"craftable": true,
+		"breakable": true,
+		"craftedAmount": 1,
+		"category": "item",
 		"recipe": [
-			{ "gold_ingot": 9 }
+			{ "golden_ingot": 9 }
 		]
 	},
 
@@ -145,7 +201,15 @@
 		"name": "Golden Apple",
 		"description": "Will heal 20% of your health in a battle.",
 		"sellPrice": 0.36,
-		"mineable": false
+		"mineable": false,
+		"craftable": true,
+		"breakable": false,
+		"category": "item",
+		"craftedAmount": 1,
+		"recipe": [
+			{ "golden_block": 8 },
+			{ "apple": 1 }
+		]
 	},
 
 	{
@@ -154,6 +218,9 @@
 		"description": "The infamous diamond...",
 		"sellPrice": 0.10,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "epic",
 		"mineableWith": ["iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -164,6 +231,9 @@
 		"description": "Useful for creating the nether portal.",
 		"sellPrice": 0.10,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "epic",
 		"mineableWith": ["diamond_pickaxe", "netherite_pickaxe"]
 	},
@@ -174,6 +244,9 @@
 		"description": "Useful for buying modpacks, enchantments and more from the store.",
 		"sellPrice": 1,
 		"mineable": true,
+		"craftable": false,
+		"breakable": false,
+		"category": "item",
 		"rarity": "legendary",
 		"mineableWith": ["iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
 	}

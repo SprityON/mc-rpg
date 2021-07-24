@@ -20,8 +20,8 @@ module.exports = {
         ], { color: embedColor }
       ))
 
-      const pickaxe = data[0][0].mining_item
-      const emote_pickaxe = BotClass.client.emojis.cache.find(e => e.name === pickaxe);
+      const pickaxe = JSON.parse(data[0][0].mining_item)
+      const emote_pickaxe = BotClass.client.emojis.cache.find(e => e.name === pickaxe.id);
 
       let mined = [];
 
@@ -37,7 +37,7 @@ module.exports = {
       ]
 
       for (let item of itemJSON) {
-        if (item.mineable && !item.category) {
+        if (item.mineable) {
 
           for (let r of rarity) {
 
@@ -46,7 +46,7 @@ module.exports = {
               let amount = Math.floor(((Math.floor(Math.random() * 10) + 1) * r.amountMultiplier)) + 1
 
               if (chance < r.chance) {
-                if (item.mineableWith.includes(pickaxe)) {
+                if (item.mineableWith.includes(pickaxe.id)) {
                   mined.push({
                     "id": item.id,
                     "rarity": item.rarity,
@@ -126,9 +126,22 @@ module.exports = {
           if (foundItem) {
             for (let f = 0; f < newInventory[1].items.length; f++) {
 
-              if (Object.keys(newInventory[1].items[f])[0] == res.id) 
-               return newInventory[1].items[f][res.id] += res.amount
+              if (Object.keys(newInventory[1].items[f])[0] == res.id) {
+                for (let ii = 0; ii < inventory[1].tools.length; ii++) {
+                  if (inventory[1].tools[ii][pickaxe.id] && inventory[1].tools[ii].code === pickaxe.code) {
+                    newInventory[1].tools[ii].currentDurability -= res.amount
 
+                    if (newInventory[1].tools[ii].currentDurability < 0) {
+                      embedReceivedItemsText += `\n\nYour ${emote_pickaxe} Pickaxe broke!`
+                      data[0][0].lumbering_item = `{"id": "fists"}`
+                      return newInventory[1].tools.splice(ii, 1)
+                    }
+                  }
+
+                  ii++
+                }
+              }
+               return newInventory[1].items[f][res.id] += res.amount
             }
           } else return newInventory[1].items.push({ [res.id]: res.amount })
         }

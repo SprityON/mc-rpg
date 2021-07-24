@@ -18,9 +18,10 @@ module.exports = {
           cmd = cmd[1]
 
           if (cmd.name === command || cmd.aliases.includes(command)) {
-            const cmdFile = require(`../commands/${cmd.category}/${cmd.name}`);
-
-            const files = Utils.modules.fs.readdirSync(`./commands/${cmd.category}`)
+            const { readdirSync } = Utils.modules.fs
+            
+            let cmdFile = require(`../commands/${cmd.category}/${cmd.name}`);
+            let files = readdirSync(`./commands/${cmd.category}`)
             
             if (files.find(file => !file.endsWith('.js')) && cmdFile.handler) return cmdFile.execute(msg, args)
 
@@ -37,7 +38,7 @@ module.exports = {
               enoughPermissions
                 ? cmdFile.execute(msg, args)
                 : msg.inlineReply(`**${msg.author.username}**, you do not have enough permissions to use this command!`)
-              })
+            })
           } 
         }
 

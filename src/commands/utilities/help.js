@@ -1,3 +1,4 @@
+const BotClass = require('../../BotClass')
 const Utils = require('../../Utils')
 
 module.exports = {
@@ -9,7 +10,11 @@ module.exports = {
   timeout: 1000,
 
   execute(msg, args) {
-    
+    if (args.length < 1) {
+      BotClass.Commands.forEach(cmd => {
+        console.log(cmd.name)
+      })
+    }
   },
 
   help: {

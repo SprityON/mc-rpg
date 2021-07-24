@@ -5,11 +5,13 @@ module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
   usage: Utils.getCmdUsage(__filename, __dirname),
-  aliases: ['inv'],
+  aliases: [],
   permissions: ['SEND_MESSAGES'],
-  timeout: 1000,
+  timeout: 2500,
 
   execute(msg, args) {
+    const shop = require('./shop/shop.json')
+
     let page;
     let filter;
 
@@ -23,25 +25,21 @@ module.exports = {
       let emeraldAmount = Utils.emeraldAmount(inventory[0]['emerald'])
       let emeraldEmote = BotClass.client.emojis.cache.find(e => e.name === 'emerald');
 
-      let listJSON = require(`./items/items.json`).concat(require(`./tools/tools.json`))
-
       Utils.embedList({
-        title: `**𝗜𝗡𝗩𝗘𝗡𝗧𝗢𝗥𝗬 ───────────── ${emeraldEmote} ${emeraldAmount}**`,
-        type: 'inventory',
-        selectQuery: `SELECT * FROM members WHERE member_id = ${msg.member.id}`,
-        JSONlist: listJSON,
+        title: `**SHOP ───────────── ${emeraldEmote} ${emeraldAmount}**`,
+        type: 'shop',
+        JSONlist: shop,
         member: msg.member,
         currPage: page,
-        showAmountOfItems: 5,
+        showAmountOfItems: 2,
         filter: filter
       }, message => msg.inlineReply(message))
     })
   },
 
   help: {
-    title: 'Inventory',
-    description: `View your inventory! To filter , use \`${Utils.getCmdUsage(__filename, __dirname)} tools\`\
-     or \`${Utils.getCmdUsage(__filename, __dirname)} items\``,
-    enabled: true
+    enabled: false,
+    title: '',
+    description: ``,
   }
 }

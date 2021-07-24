@@ -7,15 +7,15 @@ module.exports = {
   usage: Utils.getCmdUsage(__filename, __dirname),
   aliases: ['l'],
   permissions: ['SEND_MESSAGES'],
-  timeout: 1000,
+  timeout: 30000,
 
   execute(msg, args) {
     Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, data => {
       const embedColor = '9cdd84'
       const RPG_name = data[0][0].rpg_name
 
-      const axe = data[0][0].lumbering_item
-      const emote_axe = BotClass.client.emojis.cache.find(e => e.name === axe || e.name === axe);
+      const axe = JSON.parse(data[0][0].lumbering_item)
+      const emote_axe = BotClass.client.emojis.cache.find(e => e.name === axe.id);
 
       const rarity = [
         { "rarity": "common", "chance": 10000 },
@@ -28,7 +28,7 @@ module.exports = {
 
       const itemJSON = require('./items/items.json')
       const toolsJSON = require('./tools/tools.json')
-      const userTool = toolsJSON.find(tool => tool.id === axe)
+      const userTool = toolsJSON.find(tool => tool.id === axe.id)
 
       let lumbered = []
       for (let item of itemJSON) {
@@ -68,16 +68,6 @@ module.exports = {
       let inventory = JSON.parse(data[0][0].inventory);
       let newInventory = [...inventory];
 
-      let notLumbered = [];
-
-      let i = 0
-      for (i = 0; i < lumbered.length; i++) {
-        if (lumbered[i].chopped === false) {
-          let deletedItem = lumbered.splice(i, 1)[0]
-          notLumbered.push({ id: deletedItem.id, amount: deletedItem.amount })
-        }
-      }
-
       i = 1
       lumbered.forEach(res => {
         let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
@@ -97,9 +87,23 @@ module.exports = {
           if (foundItem) {
             for (let f = 0; f < newInventory[1].items.length; f++) {
 
-              if (Object.keys(newInventory[1].items[f])[0] == res.id)
-                return newInventory[1].items[f][res.id] += res.amount
+              // update durability
+              if (Object.keys(newInventory[1].items[f])[0] == res.id) {
+                for (let ii = 0; ii < inventory[1].tools.length; ii++) {
+                  if (inventory[1].tools[ii][axe.id] && inventory[1].tools[ii].code === axe.code) {
+                    newInventory[1].tools[ii].currentDurability -= res.amount
 
+                    if (newInventory[1].tools[ii].currentDurability < 0) {
+                      embedReceivedItemsText += `\n\nYour ${emote_axe} Axe broke!`
+                      data[0][0].lumbering_item = `{"id": "fists"}`
+                      return newInventory[1].tools.splice(ii, 1)
+                    }
+                  }
+
+                  ii++
+                }
+                return newInventory[1].items[f][res.id] += res.amount
+              }
             }
           } else return newInventory[1].items.push({ [res.id]: res.amount })
         }

@@ -90,15 +90,16 @@ module.exports = {
         if (!Continue) return msg.inlineReply(`Cancelled!`);
       }
 
+      let soldPrice = 0
       if (amount == 'all') {
         if (item_id) {
           let foundItem = inventory[1].items.find(item => Object.keys(item)[0])
-          console.log(foundItem)
 
           if (Object.keys(foundItem)[0] === item_id) {
             let item = allJSON.find(item => item.id === item_id)
 
             let receivedCurrency = item.sellPrice * Object.values(foundItem)
+            soldPrice = receivedCurrency
 
             inventory[0]['emerald'] += receivedCurrency
             inventory[1].items.splice(0, 1)
@@ -110,6 +111,7 @@ module.exports = {
 
             let foundItemAmount = Object.values(foundItem)
             let receivedCurrency = item.sellPrice * foundItemAmount
+            soldPrice += receivedCurrency
 
             inventory[0]['emerald'] += receivedCurrency
             inventory[1].items.splice(0, 1)
@@ -117,6 +119,7 @@ module.exports = {
         }
       } else {
         let receivedCurrency = item.sellPrice * amount
+        soldPrice = receivedCurrency
         let itemName
 
         for (let i = 0; i < inventory[1].items.length; i++) {
@@ -172,11 +175,11 @@ module.exports = {
         let alt_text = 'Sold ALL ITEMS'
         if (item_id) alt_text = `Sold ${amount} ${item.name}` 
         msg.inlineReply(Utils.createEmbed(
-          [], { title: `${alt_text}`, description: `You now have ${emote_emerald} ${emeraldAmount} Emeralds` }
+          [], { title: `${alt_text} for ${soldPrice}`, description: `You now have ${emote_emerald} ${emeraldAmount} Emeralds` }
         ))
       } else {
         msg.inlineReply(Utils.createEmbed(
-          [], { title: `Sold ${amount} ${item.name}`, description: `You now have ${emote_emerald} ${emeraldAmount} Emeralds` }
+          [], { title: `Sold ${amount} ${item.name} for ${soldPrice}`, description: `You now have ${emote_emerald} ${emeraldAmount} Emeralds` }
         ))
       }
 

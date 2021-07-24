@@ -5,13 +5,20 @@ module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
   usage: Utils.getCmdUsage(__filename, __dirname),
-  aliases: [],
+  aliases: ['c'],
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
 
   execute(msg, args) {
     Utils.query(`SELECT inventory FROM members WHERE member_id = ${msg.member.id}`, data => {
       let inventory = JSON.parse(data[0][0].inventory)
+
+      if (!args[0]) return msg.inlineReply(Utils.createEmbed(
+        [
+          [`NO ARGUMENTS`,`You have put no arguments!`]
+        ], { status: 'error' }
+      ))
+
       let itemToCraft = args[0].toLowerCase()
       let amount
       if (!isNaN(args[0])) {
@@ -85,33 +92,47 @@ module.exports = {
           if (Object.keys(invItem)[0] === recipe.id) {
             inventory[1].items[i][recipe.id] -= recipe.neededAmount
 
+            let alt_text = `${inventory[1].items[i][recipe.id]}`
+            if (inventory[1].items[i][recipe.id] <= 0) (inventory[1].items.splice(i,1), alt_text = '0')
+
             let emote = BotClass.client.emojis.cache.find(e => e.name === recipe.id)
             
-            if (lostItemsAmount == userRecipeItems.length) lostItems += `${emote} ${inventory[1].items[i][recipe.id]}`
-            if (lostItemsAmount < userRecipeItems.length) lostItems += `${emote} ${inventory[1].items[i][recipe.id]}, `
+            if (lostItemsAmount == userRecipeItems.length) lostItems += `${emote} ${alt_text}`
+            if (lostItemsAmount < userRecipeItems.length) lostItems += `${emote} ${alt_text}, `
           }
         }
       })
 
+      let craftedItemEmote = BotClass.client.emojis.cache.find(e => e.name === item.id)
+
       if (item.category === 'tools') {
-        if (!inventory[1].tools.find(invItem => Object.keys(invItem)[0] === item.id)) { 
-          inventory[1].tools.push({ [item.id]: amount }) 
-        } 
-        else {
-          inventory[1].tools[i][item.id] += amount
+
+        for (let i = 0; i < amount; i++) {
+          inventory[1].tools.push({
+            [item.id]: 1,
+            currentDurability: item.maxDurability,
+            maxDurability: item.maxDurability,
+            code: Utils.createToolCode(inventory[1])
+          })
         }
-      } else if (item.category === 'items') {
-        inventory[1].items.push({ [item.id]: amount })
-      }
-      else {
-        inventory[1].items[i][item.id] += amount
+      } else if (item.category === 'item') {
+        let foundItem = inventory[1].items.find(item2 => Object.keys(item2)[0] === item.id)
+
+        if (!foundItem) {
+          inventory[1].items.push({ [item.id]: amount * item.craftedAmount })
+        } else {
+          for (let i = 0; i < inventory[1].items.length; i++) {
+            if (inventory[1].items[i][item.id])
+              inventory[1].items[i][item.id] += amount * item.craftedAmount
+          }
+        }
       }
 
       Utils.query(`UPDATE members SET inventory = '${JSON.stringify(inventory)}' WHERE member_id = ${msg.member.id}`);
       
       msg.inlineReply(Utils.createEmbed(
         [
-          [`Bought ${amount} ${item.name}`, `You now have ${lostItems}`]
+          [`CRAFTING COMPLETE`, `You now have **${lostItems}** and **${craftedItemEmote} ${amount * item.craftedAmount}**`]
         ]
       ))
     })

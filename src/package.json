@@ -5,14 +5,15 @@
   "main": "run.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"nodemon": "nodemon ./server.js localhost 3080"
+    "nodemon": "nodemon ./server.js localhost 3080"
   },
   "author": "Sprity",
   "license": "GPL-3.0",
   "dependencies": {
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
-    "mysql": "^2.18.1"
+    "mysql": "^2.18.1",
+    "string-progressbar": "^1.0.4"
   },
   "repository": {
     "type": "git",

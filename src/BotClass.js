@@ -26,8 +26,10 @@ module.exports = new class BotClass {
 
 	async ready(bot) {
 		console.log(`Ready as ${bot.user.tag}!\n`)
+
+		bot.user.setActivity('mc?help', { type: 'LISTENING' })
 		
-		await Utils.load();
+		Utils.load();
 	}
 
 	guildCreate(guild) {

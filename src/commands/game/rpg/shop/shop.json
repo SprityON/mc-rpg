@@ -1,0 +1,16 @@
+[
+	{
+		"id": "pass_sand_dunes",
+		"emoji": "sand_block",
+		"name": "Sand Dunes",
+		"description": "+ MORE adventure content\n(more loot, enemies)\n+ Sand Monsters\n+ TNT",
+		"price": 100
+	},
+	{
+		"id": "pass_ruby_items",
+		"emoji": "ruby_ore",
+		"name": "Ruby Items",
+		"description": "+ New Ore (Ruby)\n+ Ruby Weapons and Armor\n+ Ruby Collectables",
+		"price": 100
+	}
+]
