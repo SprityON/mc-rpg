@@ -149,7 +149,7 @@
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
-			{ "wooden_planks": 3 }
+			{ "wooden_planks": 2 }
 		],
 
 		"usedFor": ["combat"],
