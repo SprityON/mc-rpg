@@ -78,8 +78,6 @@ module.exports = class Utils {
 
         conn.release();
       }
-
-      conn.end()
     })
   }
 
