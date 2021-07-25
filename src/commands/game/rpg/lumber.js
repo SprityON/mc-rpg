@@ -91,11 +91,11 @@ module.exports = {
               // update durability
               if (Object.keys(newInventory[1].items[f])[0] == res.id) {
                 for (let ii = 0; ii < inventory[1].tools.length; ii++) {
-                  if (inventory[1].tools[ii][axe.id] && inventory[1].tools[ii].code === axe.code) {
+                  if (inventory[1].tools[ii][axe.id] && inventory[1].tools[ii].code == axe.code) {
                     newInventory[1].tools[ii].currentDurability -= res.amount
 
                     if (newInventory[1].tools[ii].currentDurability < 0) {
-                      broken_axe_text += `\n\n**AW MAN...**\nYour ${emote_axe} Axe broke!`
+                      broken_axe_text += `\n\n**AWW MAN...**\nYour ${emote_axe} Axe broke!`
                       data[0][0].lumbering_item = `{"id": "fists"}`
                       return newInventory[1].tools.splice(ii, 1)
                     }
@@ -114,7 +114,7 @@ module.exports = {
 
       embed.addField(`YOU GOT`, `${embedReceivedItemsText}${broken_axe_text}`)
 
-      Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}' WHERE member_id = ${msg.member.id}`);
+      Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', lumbering_item = '${data[0][0].lumbering_item}' WHERE member_id = ${msg.member.id}`);
       msg.channel.send(embed)
     })
   }, 
