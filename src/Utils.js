@@ -49,6 +49,7 @@ module.exports = class Utils {
 
   static dbConnect() {
     return require('mysql').createPool({
+      connectionLimit: 500,
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
@@ -70,13 +71,13 @@ module.exports = class Utils {
         console.error(err);
       } else {
         conn.query(sql, bindings, function (err, result, fields) {
+          conn.release();
           if (err) throw err
           if (usingCallback) {
             callback([result, fields, err]);
           } 
         })
 
-        conn.release();
       }
     })
   }
