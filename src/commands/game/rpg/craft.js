@@ -37,6 +37,14 @@ module.exports = {
         ], { title: `Haha. Very funny.` }
       ))
 
+      if (isNaN(amount)) return msg.inlineReply(Utils.createEmbed(
+        [
+          [`WRONG USAGE`,`\`${amount}\` is not a number!`]
+        ], { status: 'error' }
+      ))
+
+      console.log(args)
+
       let allJSON = require('./items/items.json').concat(require('./tools/tools.json'))
       let item = allJSON.find(item => item.id === itemToCraft)
       if (!item) return msg.inlineReply(Utils.createEmbed(

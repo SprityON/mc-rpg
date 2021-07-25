@@ -12,14 +12,14 @@ module.exports = class Utils {
 
       readdirSync(`./commands/${category}`)
       .forEach(commandFile => {
-        let command = require(`${__dirname}\\commands\\${category}\\${commandFile}`);
+        let command = require(`./commands/${category}/${commandFile}`);
 
         // if the command is in another folder
-        if (lstatSync(`${__dirname}\\commands\\${category}\\${commandFile}`).isDirectory()) {
-          readdirSync(`${__dirname}\\commands\\${category}\\${commandFile}`)
+        if (lstatSync(`./commands/${category}/${commandFile}`).isDirectory()) {
+          readdirSync(`./commands/${category}/${commandFile}`)
             .forEach(commandFile2 => {
               if (commandFile2.endsWith('.js')) {
-                command = require(`${__dirname}\\commands\\${category}\\${commandFile}\\${commandFile2}`)
+                command = require(`./commands/${category}/${commandFile}/${commandFile2}`)
                 BotClass.Commands.set(command.name, command);
               }
           })
@@ -36,7 +36,7 @@ module.exports = class Utils {
           (Utils.getFileName(e),
             (...args) => {
               if (args[0].author.bot && args[0].author.bot === true) return
-              require(`${__dirname}\\events\\${e}`).execute(...args);
+              require(`./events/${e}`).execute(...args);
             })
       })
   }
@@ -158,8 +158,8 @@ module.exports = class Utils {
   static getFileName(path) {
     let fileName;
     path.endsWith('.js')
-      ? fileName = path.split("\\")[path.split('\\').length - 1].split(".")[0]
-      : fileName = path.split("\\")[path.split('\\').length]
+      ? fileName = path.split(process.env.SPLITTER)[path.split(process.env.SPLITTER).length - 1].split(".")[0]
+      : fileName = path.split(process.env.SPLITTER)[path.split(process.env.SPLITTER).length]
 
     return fileName;
   }
@@ -187,19 +187,19 @@ module.exports = class Utils {
   }
 
   static getCmdName(filename, dirname) {
-    const cmdName = filename.replace(dirname + '\\', '').split('.')[0];
+    const cmdName = filename.replace(dirname + process.env.SPLITTER, '').split('.')[0];
 
     return cmdName;
   }
 
   static getCmdCategory(filename) {
-    const cmdCategory = filename.split('\\')[filename.split('\\').length - 2];
+    const cmdCategory = filename.split(process.env.SPLITTER)[filename.split(process.env.SPLITTER).length - 2];
 
     return cmdCategory;
   }
 
   static getCmdUsage(filename, dirname) {
-    const cmdUsage = require('./config.json').defaultPrefix + filename.replace(dirname + '\\', '').split('.')[0] + ' ';
+    const cmdUsage = require('./config.json').defaultPrefix + filename.replace(dirname + process.env.SPLITTER, '').split('.')[0] + ' ';
 
     return cmdUsage;
   }
