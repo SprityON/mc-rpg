@@ -133,7 +133,7 @@ module.exports = {
                     newInventory[1].tools[ii].currentDurability -= res.amount
 
                     if (newInventory[1].tools[ii].currentDurability < 0) {
-                      broken_pickaxe_text += `\n\nYour ${emote_pickaxe} Pickaxe broke!`
+                      broken_pickaxe_text += `\n\n**AW MAN...**\nYour ${emote_pickaxe} Pickaxe broke!`
                       data[0][0].mining_item = ``
                       return newInventory[1].tools.splice(ii, 1)
                     }

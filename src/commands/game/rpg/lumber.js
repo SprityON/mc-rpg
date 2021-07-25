@@ -95,7 +95,7 @@ module.exports = {
                     newInventory[1].tools[ii].currentDurability -= res.amount
 
                     if (newInventory[1].tools[ii].currentDurability < 0) {
-                      broken_axe_text += `\n\nYour ${emote_axe} Axe broke!`
+                      broken_axe_text += `\n\n**AW MAN...**\nYour ${emote_axe} Axe broke!`
                       data[0][0].lumbering_item = `{"id": "fists"}`
                       return newInventory[1].tools.splice(ii, 1)
                     }
