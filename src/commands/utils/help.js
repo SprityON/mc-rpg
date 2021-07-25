@@ -4,7 +4,11 @@ const Utils = require('../../Utils')
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
-  usage: Utils.getCmdUsage(__filename, __dirname),
+  usage(guild_id, callback) {
+    Utils.getCmdUsage(__filename, __dirname, data => {
+      callback(data)
+    }, guild_id)
+  },
   aliases: [],
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
@@ -15,7 +19,6 @@ module.exports = {
     let categories = require(`../categories.json`)
     const commandCategoryFolders = readdirSync('commands').filter(file => !file.includes('.'))
     let embed = new BotClass.Discord.MessageEmbed()
-    .setColor(process.env.EMBEDCOLOR)
     if (!args[0]) {
         embed.setTitle(`Commands`)
         .setFooter(`For more specific information: help (category/command)`)

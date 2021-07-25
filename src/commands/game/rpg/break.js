@@ -4,7 +4,11 @@ const Utils = require('../../../Utils')
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
-  usage: Utils.getCmdUsage(__filename, __dirname),
+  usage(guild_id, callback) {
+    Utils.getCmdUsage(__filename, __dirname, data => {
+      callback(data)
+    }, guild_id)
+  },
   aliases: ['b', 'br'],
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,

@@ -16,18 +16,18 @@ module.exports = new class BotClass {
 	 * Logs the bot in, meanwhile also loading every command and event.
 	 */
 
-	run(bot) {
+	run(client) {
 		require("./replyInline")
-		bot.login(process.env.TOKEN);
-		bot.on('ready', this.ready.bind(this, bot))
+		client.login(process.env.TOKEN);
+		client.on('ready', this.ready.bind(this, client))
 			.on('guildCreate', this.guildCreate.bind(this))
 			.on('guildDelete', this.guildDelete.bind(this))
 	}
 
-	async ready(bot) {
-		console.log(`Ready as ${bot.user.tag}!\n`)
+	async ready(client) {
+		console.log(`Ready as ${client.user.tag}!\n`)
 
-		bot.user.setActivity('mc?help', { type: 'LISTENING' })
+		client.user.setActivity('mc?help', { type: 'LISTENING' })
 		
 		Utils.load();
 	}

@@ -1,3 +1,5 @@
+const BotClass = require('./BotClass');
+
 module.exports = class Utils {
 
   /* STARTUP METHODS AND PROPERTIES */
@@ -47,37 +49,30 @@ module.exports = class Utils {
 
   /* DB METHODS */
 
-  static dbConnect() {
-    return require('mysql').createPool({
+  static async query(sql, bindings, callback) {
+    const pool = require('mysql').createPool({
       timeout: 10000,
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
       database: "mc_rpg"
     })
-  }
-
-  static async query(sql, bindings, callback) {
-    const pool = this.dbConnect();
+    
     let usingCallback = arguments[1];
     
-    if (Array.isArray(bindings)) {
-      usingCallback = arguments[2]
-    } else { callback = bindings; bindings = [] }
+    Array.isArray(bindings)
+      ? usingCallback = arguments[2]
+      : callback = bindings; bindings = []
 
     pool.getConnection((err, conn) => {
-      if (err) {
-        console.error(err);
-      } else {
-        conn.query(sql, bindings, function (err, result, fields) {
-          conn.release();
-          if (err) throw err
-          if (usingCallback) {
-            callback([result, fields, err]);
-          } 
-        })
+      err 
+        ? console.error(err) 
+        : conn.query(sql, bindings, function (err, result, fields) {
+            if (err) throw err
+            if (usingCallback) callback([result, fields, err]);
+          })
 
-      }
+      conn.release();
     })
   }
 
@@ -198,10 +193,12 @@ module.exports = class Utils {
     return cmdCategory;
   }
 
-  static getCmdUsage(filename, dirname) {
-    const cmdUsage = require('./config.json').defaultPrefix + filename.replace(dirname + process.env.SPLITTER, '').split('.')[0] + ' ';
+  static getCmdUsage(filename, dirname, callback, guild_id) {
+    if (!guild_id) return
 
-    return cmdUsage;
+    this.query(`SELECT prefix FROM guilds WHERE guild_id = ${guild_id}`, result => {
+      callback(result[0][0].prefix)
+    })
   }
 
   static emeraldAmount(emeralds) {
