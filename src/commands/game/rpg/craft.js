@@ -42,7 +42,7 @@ module.exports = {
           [`WRONG USAGE`,`\`${amount}\` is not a number!`]
         ], { status: 'error' }
       ))
-
+//
       console.log(args)
 
       let allJSON = require('./items/items.json').concat(require('./tools/tools.json'))
