@@ -18,6 +18,7 @@ module.exports = {
 
     Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, result => {
       const toolsJSON = require('./tools/tools.json')
+      const itemsJSON = require('./items/items.json')
       const rpg_name = result[0][0].rpg_name
       const inventory = JSON.parse(result[0][0].inventory)
       const progressBar = require('string-progressbar');
@@ -39,9 +40,22 @@ module.exports = {
           return `${emoji} (${progressBar.filledBar(pickaxe.maxDurability, pickaxe.currentDurability, 5)[0]})`
         } else return 'None'
       }
-      
+
+      let itemAmount = 0
+      let inventoryWorth = 0
+      inventory[1].items.forEach(item => {
+        let jsonItem = itemsJSON.find(item2 => item2.id === Object.keys(item)[0])
+        itemAmount += Object.values(item)[0]
+
+        inventoryWorth += Object.values(item)[0] * jsonItem.sellPrice
+      })
+      inventory[1].tools.forEach(item => {
+        itemAmount++
+      })
+
       embed.setAuthor(`${rpg_name}'s profile`, msg.author.avatarURL({dynamic: true}))
-      embed.addField(`Equipped Tools`, `Pickaxe: **${equipped_pickaxe()}**\nAxe: **${equipped_axe()}**\nSword: **None**`)
+      embed.addField(`Inventory`, `Total items: ${itemAmount} items\nWorth ${Utils.emeraldAmount(inventoryWorth)} Emeralds`, true)
+      embed.addField(`Equipped Tools`, `Pickaxe: **${equipped_pickaxe()}**\nAxe: **${equipped_axe()}**\nSword: **None**`, true)
 
 
       msg.inlineReply(embed)
