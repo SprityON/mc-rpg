@@ -27,7 +27,7 @@ module.exports = {
   },
 
   help: {
-    enabled: true,
+    enabled: false,
     title: 'Say',
     description: `I will mimick your message!`
   }

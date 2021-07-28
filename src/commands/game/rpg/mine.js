@@ -101,7 +101,7 @@ module.exports = {
       for (let res of notMined) {
         let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
 
-        notMined.length - 1 <= 1 | i == notMined.length - 1
+        notMined.length - 1 <= 1 || i == notMined.length - 1
           ? embedTriedMiningFailed += `${emote} **${res.amount}**`
           : embedTriedMiningFailed += `${emote} **${res.amount}**, `
 

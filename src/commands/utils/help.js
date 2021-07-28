@@ -63,6 +63,7 @@ module.exports = {
       }
 
       if (isCategory) {
+        console.log('hi')
         embed.setTitle(`${args[0].slice(0,1).toUpperCase() + args[0].slice(1,args[0].length)} Commands`)
 
         let i = 1
@@ -72,9 +73,9 @@ module.exports = {
           if (lstatSync(`commands/${args[0]}/${file}`).isDirectory()) {
             const commands = readdirSync(`commands/${args[0]}/${file}`).filter(file => file.endsWith('.js'))
 
-              commands.forEach(cmd => {
+            commands.forEach(cmd => {
               let command = require(`../${args[0]}/${file}/${cmd}`)
-              if (!command.handler) {
+              if (!command.handler && command.help.enabled === true) {
                 cmd = cmd.slice(0, -3)
 
                 i === commands.length
@@ -88,8 +89,8 @@ module.exports = {
             break
           } else {
             i === files.length
-              ? text += `\`${file}\``
-              : text += `\`${file}\`, `
+              ? text += `\`${file.slice(0, -3)}\``
+              : text += `\`${file.slice(0, -3)}\`, `
           }
 
           i++
@@ -122,12 +123,11 @@ module.exports = {
 
         })
 
-        Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, result => {
-          const prefix = Object.values(result[0][0])[0]
-          
+        command.usage(msg.guild.id, prefix => {
+
           embed.setTitle(`help ${command.name}`)
             .addField(`Description`, `${command.help.description}`)
-            .addField(`Usage`, `\`${prefix}${command.usage.trim().slice(3, command.usage.length)}\``)
+            .addField(`Usage`, `\`${prefix}${command.name}\``)
             .addField(`Aliases`, `${aliases}`)
             .addField(`Cooldown`, `${command.timeout / 1000}s`)
             .addField(`Permissions`, `${permissions}`)
