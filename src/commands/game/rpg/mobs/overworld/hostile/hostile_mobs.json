@@ -1,0 +1,33 @@
+[
+	{
+		"name": "Creeper",
+		"hp": 20,
+		"type": "text",
+		"texts": [
+			"hiss type thisss or you die",
+			"creeper aww man",
+			"creeper go poof",
+			"i go boom boom at times",
+			"tnt is my favorite block",
+			"my hobby is exploding",
+			"tnt has three letters",
+			"you aint getting my head"
+		],
+		"attacks": [
+			{ 
+				"name": "explode", 
+				"type": "items",
+				"text": "Creeper blew up"
+			}
+		],
+		"drops": [
+			{
+				"id": "gunpowder", 
+				"name": "Gunpowder",
+				"chance": 8000,
+				"minAmount": 0,
+				"maxAmount": 2
+			}
+		]
+	}
+]

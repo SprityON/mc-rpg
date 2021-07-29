@@ -9,7 +9,7 @@ module.exports = {
       callback(data)
     }, guild_id)
   },
-  aliases: ['stats', 'p', 'pr'],
+  aliases: ['stats', 'pr'],
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
 
@@ -17,27 +17,33 @@ module.exports = {
     let embed = new BotClass.Discord.MessageEmbed()
 
     Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, result => {
-      const toolsJSON = require('./tools/tools.json')
       const itemsJSON = require('./items/items.json')
       const rpg_name = result[0][0].rpg_name
       const inventory = JSON.parse(result[0][0].inventory)
       const progressBar = require('string-progressbar');
 
-      let durability_axe
-      let equipped_axe = () => {
+      const equipped_axe = () => {
         let axe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].lumbering_item).id)
         let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(axe)[0])
 
         if (!axe.code) return `${emoji}`
         return `${emoji} (${progressBar.filledBar(axe.maxDurability, axe.currentDurability, 5)[0]})`
       }
-      let durability_pickaxe
-      let equipped_pickaxe = () => {
+      const equipped_pickaxe = () => {
         if (result[0][0].mining_item) {
           let pickaxe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].mining_item).id)
           let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(pickaxe)[0])
 
           return `${emoji} (${progressBar.filledBar(pickaxe.maxDurability, pickaxe.currentDurability, 5)[0]})`
+        } else return 'None'
+      }
+      const equipped_sword = () => {
+        if (result[0][0].battle_item) {
+          let sword = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].battle_item).id)
+          console.log(sword)
+          let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(sword)[0])
+
+          return `${emoji} (${progressBar.filledBar(sword.maxDurability, sword.currentDurability, 5)[0]})`
         } else return 'None'
       }
 
@@ -53,10 +59,11 @@ module.exports = {
         itemAmount++
       })
 
-      embed.setAuthor(`${rpg_name}'s profile`, msg.author.avatarURL({dynamic: true}))
-      embed.addField(`Inventory`, `Total items: ${itemAmount} items\nWorth ${Utils.emeraldAmount(inventoryWorth)} Emeralds`, true)
-      embed.addField(`Equipped Tools`, `Pickaxe: **${equipped_pickaxe()}**\nAxe: **${equipped_axe()}**\nSword: **None**`, true)
+      let emerald = BotClass.client.emojis.cache.find(e => e.name === 'emerald')
 
+      embed.setAuthor(`${rpg_name}'s profile`, msg.author.avatarURL({dynamic: true}))
+      embed.addField(`Inventory`, `Total items: ${itemAmount} items\nWorth ${emerald} ${Utils.emeraldAmount(inventoryWorth)}`, true)
+      embed.addField(`Equipped Tools`, `Pickaxe: **${equipped_pickaxe()}**\nAxe: **${equipped_axe()}**\nSword: **${equipped_sword()}**`, true)
 
       msg.inlineReply(embed)
     })

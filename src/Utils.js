@@ -96,10 +96,9 @@ module.exports = class Utils {
     setFooter: ''
   }) {
     const BotClass = require('./BotClass');
-    const Utils = this
 
     let embed = new BotClass.Discord.MessageEmbed()
-      .setColor(Utils.botRoleColor());
+      .setColor(process.env.EMBEDCOLOR);
 
     const colors = [
       { 'error': 'ff0000' },
@@ -211,7 +210,7 @@ module.exports = class Utils {
   }
 
   static checkIfCodeExists(toolCode, inventory) {
-    if (inventory.tools.find(item => Object.values(item)[0] === toolCode)) return createToolCode()
+    if (inventory.tools.find(item => Object.values(item)[0] === toolCode)) return this.createToolCode(inventory)
 
     return toolCode
   }
@@ -473,9 +472,7 @@ module.exports = class Utils {
 
                   if (pageItemsAmount > showAmountOfItems) { Continue = false; continue; }
 
-                  text += `${emote} **${item.name}**\n\
-                *You need:* ${recipeText}\n\
-        *ID* \`${item.id}\`\n\n`
+                  text += `${emote} **${item.name}**\n*You need:* **${recipeText}**\n*ID* \`${item.id}\`\n\n`
 
                   testI++
                   i++
@@ -546,8 +543,7 @@ module.exports = class Utils {
 
                   const emote = BotClass.client.emojis.cache.find(e => e.name === item.emoji)
 
-                  text += `${emote} **${item.name}**\n\
-                  ${item.description}\n\n**Price:** ${emeraldEmote} ${item.price}\n\n─────────\n\n`
+                  text += `${emote} **${item.name}**\n${item.description}\n\n**Price:** ${emeraldEmote} ${item.price}\n\n─────────\n\n`
 
                   testI++
                   i++

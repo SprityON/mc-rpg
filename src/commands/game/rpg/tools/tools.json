@@ -2,7 +2,6 @@
 	{
 		"id": "fists",
 		"name": "Fists",
-		"description": "These uhh.. are my uhh... fists! Yeah.. My fists.",
 		"craftable": false,
 
 		"usedFor": ["lumber", "combat"],
@@ -20,7 +19,6 @@
 	{
 		"id": "wooden_axe",
 		"name": "Wooden Axe",
-		"description": "You can do some lumber with this one! Oh and you can fight with it.",
 		"category": "tools",
 		"maxDurability": 59,
 		"recipe": [
@@ -45,7 +43,6 @@
 	{
 		"id": "stone_axe",
 		"name": "Stone Axe",
-		"description": "Your regular Stone axe.",
 		"category": "tools",
 		"maxDurability": 131,
 		"recipe": [
@@ -70,7 +67,6 @@
 	{
 		"id": "iron_axe",
 		"name": "Iron Axe",
-		"description": "Better then the Stone Axe, of course.",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
@@ -95,7 +91,6 @@
 	{
 		"id": "golden_axe",
 		"name": "Golden Axe",
-		"description": "Has great speed, but it surely lacks durability.",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
@@ -120,7 +115,6 @@
 	{
 		"id": "diamond_axe",
 		"name": "Diamond Axe",
-		"description": "The perfect Axe. It is also very shiny!",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
@@ -145,10 +139,9 @@
 	{
 		"id": "wooden_sword",
 		"name": "Wooden Sword",
-		"description": "Slightly stronger then your fists.",
 		"category": "tools",
 		"recipe": [
-			{ "stick": 2 },
+			{ "stick": 1 },
 			{ "wooden_planks": 2 }
 		],
 
@@ -159,17 +152,106 @@
 		"craftedAmount": 1,
 		
 		"combat": {
-			"damageMultiplier": 0.8,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1,
+			"damage": 3,
 			"speedMultiplier": 1.1
+		}
+	},
+
+	{
+		"id": "stone_sword",
+		"name": "Stone Sword",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 1
+			},
+			{
+				"cobblestone": 2
+			}
+		],
+		"usedFor": ["combat"],
+		"craftable": true,
+		"breakable": true,
+		"maxDurability": 131,
+		"craftedAmount": 1,
+		"combat": {
+			"damage": 5,
+			"speed": 1.6
+		}
+	},
+
+	{
+		"id": "golden_sword",
+		"name": "Golden Sword",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 1
+			},
+			{
+				"golden_ingot": 2
+			}
+		],
+		"usedFor": ["combat"],
+		"craftable": true,
+		"breakable": true,
+		"maxDurability": 32,
+		"craftedAmount": 1,
+		"combat": {
+			"damage": 4,
+			"speed": 1.6
+		}
+	},
+
+	{
+		"id": "iron_sword",
+		"name": "Iron Sword",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 1
+			},
+			{
+				"iron_ingot": 2
+			}
+		],
+		"usedFor": ["combat"],
+		"craftable": true,
+		"breakable": true,
+		"maxDurability": 250,
+		"craftedAmount": 1,
+		"combat": {
+			"damage": 6,
+			"speed": 1.6
+		}
+	},
+
+	{
+		"id": "diamond_sword",
+		"name": "Diamond Sword",
+		"category": "tools",
+		"recipe": [
+			{
+				"stick": 1
+			},
+			{
+				"diamond": 2
+			}
+		],
+		"usedFor": ["combat"],
+		"craftable": true,
+		"breakable": true,
+		"maxDurability": 1561,
+		"craftedAmount": 1,
+		"combat": {
+			"damage": 7,
+			"speed": 1.6
 		}
 	},
 
 	{
 		"id": "wooden_pickaxe",
 		"name": "Wooden Pickaxe",
-		"description": "You can do some lumber with this one! Oh and you can attack.",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 }, 
@@ -186,7 +268,6 @@
 	{
 		"id": "stone_pickaxe",
 		"name": "Stone Pickaxe",
-		"description": "A pickaxe made out of stone.",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
@@ -202,7 +283,6 @@
 	{
 		"id": "iron_pickaxe",
 		"name": "Iron Pickaxe",
-		"description": "Much better then the Stone Pickaxe!",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
@@ -218,7 +298,6 @@
 	{
 		"id": "golden_pickaxe",
 		"name": "Golden Pickaxe",
-		"description": "Sure looks rich-ish and stuff, but just really useless.",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
@@ -234,7 +313,6 @@
 	{
 		"id": "diamond_pickaxe",
 		"name": "Diamond Pickaxe",
-		"description": "A pickaxe made out of diamonds!",
 		"category": "tools",
 		"recipe": [
 			{ "stick": 2 },
