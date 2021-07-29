@@ -161,7 +161,7 @@ module.exports = {
 
       msg.channel.send(embed)
 
-      const battle_item = JSON.parse(data[0][0].battle_item)
+      let battle_item = JSON.parse(data[0][0].battle_item)
       let random = Math.floor(Math.random() * 10) + 1
       if (random <= 3) {
         const hostileMobs = require('./mobs/overworld/hostile/hostile_mobs.json')
@@ -259,7 +259,7 @@ module.exports = {
                   else {
                     let damageDone
 
-                    battle_item
+                    battle_item.id
                       ? (mobHealth -= toolsJSON.find(tool => tool.id === battle_item.id).combat.damage, 
                         damageDone = toolsJSON.find(tool => tool.id === battle_item.id).combat.damage)
                       : (mobHealth -= 1, 
