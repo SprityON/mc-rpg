@@ -175,7 +175,7 @@ module.exports = {
           case 'text':
             let randomText = selectedMob.texts[Math.floor(Math.random() * selectedMob.texts.length - 1) + 1]
             embed.setDescription(`***Quick!** Type in: \`${randomText}\` or \`run\`*`)
-            .addField(`Timeout`, `\n6 seconds`, true)
+            .addField(`Time left`, `\n10 seconds`, true)
             .addField(`HP`, `${selectedMob.hp}/${selectedMob.hp}`, true)
             .attachFiles([`./commands/game/rpg/mobs/overworld/hostile/img/${selectedMob.name.toLowerCase()}.png`])
             .setThumbnail(`attachment://${selectedMob.name.toLowerCase()}.png`)
@@ -250,7 +250,7 @@ module.exports = {
 
               function doDamage() {
                 let filter = m => m.author.id === msg.author.id
-                msg.channel.awaitMessages(filter, { max: 1, time: 6000 }).then(collected => {
+                msg.channel.awaitMessages(filter, { max: 1, time: 10000 }).then(collected => {
                   if (collected.first().content.toLowerCase() !== randomText.toLowerCase()) {
                     newInventory = loss(msg, newInventory, selectedMob)
                     return Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', mining_item = '${data[0][0].mining_item}' WHERE member_id = ${msg.member.id}`);
