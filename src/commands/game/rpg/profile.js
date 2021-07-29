@@ -38,9 +38,8 @@ module.exports = {
         } else return 'None'
       }
       const equipped_sword = () => {
-        if (JSON.parse(result[0][0].mining_item).id) {
+        if (JSON.parse(result[0][0].battle_item).id) {
           let sword = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].battle_item).id)
-          console.log(sword)
           let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(sword)[0])
 
           return `${emoji} (${progressBar.filledBar(sword.maxDurability, sword.currentDurability, 5)[0]})`

@@ -239,7 +239,7 @@ module.exports = {
 
                 msg.inlineReply(Utils.createEmbed([
                   []
-                ], { title: `${mob.attacks[0].text} and you lost:`, description: `**${text}**`} ))
+                ], { title: `${mob.attacks[0].text} and you lost:`, description: `**${text}**`, color: 'ff0000'} ))
 
                 return inventory
               }
@@ -290,8 +290,8 @@ module.exports = {
 
                   }
                 }).catch(collected => {
-                  console.log(collected)
-                  msg.channel.send(`It took you too long and you lost.`)
+                  newInventory = loss(msg, newInventory, selectedMob)
+                  return Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', mining_item = '${data[0][0].mining_item}' WHERE member_id = ${msg.member.id}`);
                 })
               }
             })

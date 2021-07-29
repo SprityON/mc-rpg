@@ -16,12 +16,13 @@ module.exports = {
   execute(msg, args) {
     Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, result => {
       const inventory = JSON.parse(result[0][0].inventory)
-      const item_id = args[0].toLowerCase()
-      const item_code = args[1]
 
-      if (!item_id) return msg.inlineReply(Utils.createEmbed([
+      if (!args[0]) return msg.inlineReply(Utils.createEmbed([
         [`NO ARGUMENTS`, `You have to provide some arguments!`]
       ], { status: 'error' }))
+      
+      const item_id = args[0].toLowerCase()
+      const item_code = args[1]
 
       if (item_code && isNaN(item_code)) return msg.inlineReply(Utils.createEmbed([
         [`ERROR`,`Item codes are only numbers!`]
