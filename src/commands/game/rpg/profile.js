@@ -30,7 +30,7 @@ module.exports = {
         return `${emoji} (${progressBar.filledBar(axe.maxDurability, axe.currentDurability, 5)[0]})`
       }
       const equipped_pickaxe = () => {
-        if (result[0][0].mining_item.length > 0) {
+        if (result[0][0].mining_item.id) {
           let pickaxe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].mining_item).id)
           let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(pickaxe)[0])
 
@@ -38,7 +38,7 @@ module.exports = {
         } else return 'None'
       }
       const equipped_sword = () => {
-        if (result[0][0].battle_item.length > 0) {
+        if (result[0][0].battle_item.id) {
           let sword = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].battle_item).id)
           console.log(sword)
           let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(sword)[0])
