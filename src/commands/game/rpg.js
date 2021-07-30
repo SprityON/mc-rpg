@@ -15,13 +15,19 @@ module.exports = {
 
   async execute(msg, args) {
     await Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, member => {
+      var arguments = args
 
-      if (!member[0][0] && args[0] !== 'create') return msg.inlineReply(
-        Utils.createEmbed(
-        [
-          [`ERROR`, `You don't have an account!\nCreate one by using command: \`rpg create\``]
-        ], { status: 'error' }
-      ))
+      if (!member[0][0] && args[0].toLowerCase() !== 'create') {
+        Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, result => {
+          return msg.inlineReply(
+            Utils.createEmbed(
+              [
+                [`ERROR`, `You don't have an account!\nCreate one by using command: \`${result[0][0].prefix}rpg create\``]
+              ], { status: 'error' }
+            ))
+        })
+        return
+      }
 
       if (!args[0]) return msg.channel.send(
         Utils.createEmbed(

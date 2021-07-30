@@ -62,7 +62,7 @@ module.exports = class Utils {
     
     Array.isArray(bindings)
       ? usingCallback = arguments[2]
-      : callback = bindings; bindings = []
+      : (callback = bindings, bindings = [])
 
     pool.getConnection((err, conn) => {
       err 

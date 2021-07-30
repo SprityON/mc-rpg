@@ -18,7 +18,7 @@ module.exports = {
       const embedColor = '#b8b8b8';
       const RPG_name = data[0][0].rpg_name
 
-      if (!data[0][0].mining_item) return msg.inlineReply(Utils.createEmbed(
+      if (!JSON.parse(data[0][0].mining_item).id) return msg.inlineReply(Utils.createEmbed(
         [
           [`NO PICKAXE EQUIPPED`, `Buy or equip a pickaxe to be able to mine.`]
         ], { color: embedColor }

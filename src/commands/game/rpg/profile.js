@@ -23,11 +23,15 @@ module.exports = {
       const progressBar = require('string-progressbar');
 
       const equipped_axe = () => {
-        let axe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].lumbering_item).id)
-        let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(axe)[0])
+        if (JSON.parse(result[0][0].lumbering_item).code) {
+          let axe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].lumbering_item).id)
+          let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(axe)[0])
 
-        if (!axe.code) return `${emoji}`
-        return `${emoji} (${progressBar.filledBar(axe.maxDurability, axe.currentDurability, 5)[0]})`
+          if (!axe.code) return `${emoji}`
+          return `${emoji} (${progressBar.filledBar(axe.maxDurability, axe.currentDurability, 5)[0]})`
+        } else {
+          return `None`
+        }
       }
       const equipped_pickaxe = () => {
         if (JSON.parse(result[0][0].mining_item).id) {
