@@ -281,6 +281,7 @@ module.exports = {
                           let emote = BotClass.client.emojis.cache.find(e => e.name === drop.id)
 
                           win(collected.first(), `${emote} ${dropAmount}`, selectedMob)
+                          return Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', mining_item = '${data[0][0].mining_item}' WHERE member_id = ${msg.member.id}`);
                         }
 
                         else win(collected.first(), 'Nothing...', selectedMob)

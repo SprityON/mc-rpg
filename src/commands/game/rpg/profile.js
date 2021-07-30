@@ -24,6 +24,7 @@ module.exports = {
 
       const equipped_axe = () => {
         if (JSON.parse(result[0][0].lumbering_item).code) {
+          console.log(inventory[1].tools[1])
           let axe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].lumbering_item).id)
           let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(axe)[0])
 
