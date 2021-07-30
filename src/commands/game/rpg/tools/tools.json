@@ -31,12 +31,9 @@
 		"amountMultiplier": 0.4,
 		"breakable": true,
 		"craftedAmount": 1,
-		
 		"combat": {
-			"damageMultiplier": 0.5,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1,
-			"speedMultiplier": 0.4
+			"damage": 7,
+			"speed": 1
 		}
 	},
 
@@ -57,10 +54,8 @@
 		"craftedAmount": 1,
 		
 		"combat": {
-			"damageMultiplier": 0.6,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1,
-			"speedMultiplier": 0.5
+			"damage": 9,
+			"speed": 1
 		}
 	},
 
@@ -81,10 +76,8 @@
 		"craftedAmount": 1,
 		
 		"combat": {
-			"damageMultiplier": 0.7,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1,
-			"speedMultiplier": 0.6
+			"damage": 9,
+			"speed": 1
 		}
 	},
 
@@ -105,10 +98,8 @@
 		"craftedAmount": 1,
 		
 		"combat": {
-			"damageMultiplier": 0.8,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1,
-			"speedMultiplier": 1
+			"damage": 7,
+			"speed": 1
 		}
 	},
 
@@ -129,10 +120,8 @@
 		"craftedAmount": 1,
 		
 		"combat": {
-			"damageMultiplier": 1,
-			"armorMultiplier":  1,
-			"healthMultiplier": 1,
-			"speedMultiplier": 0.9
+			"damage": 9,
+			"speed": 1
 		}
 	},
 
@@ -152,8 +141,8 @@
 		"craftedAmount": 1,
 		
 		"combat": {
-			"damage": 3,
-			"speedMultiplier": 1.1
+			"damage": 4,
+			"speedMultiplier": 1.6
 		}
 	},
 

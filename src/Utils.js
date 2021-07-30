@@ -52,6 +52,7 @@ module.exports = class Utils {
   static async query(sql, bindings, callback) {
     const pool = require('mysql').createPool({
       timeout: 10000,
+      connectionLimit: 50,
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASS,
