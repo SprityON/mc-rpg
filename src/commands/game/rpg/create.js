@@ -27,7 +27,7 @@ module.exports = {
 
           const RPG_name = collected.first().content;
             
-          Utils.query(`INSERT INTO members (member_id, rpg_name, inventory, lumbering_item) VALUES (?, ?, ?, ?)`, [msg.member.id, RPG_name, '[{ "emerald": 0, "tools": [{"fists": 1}], "items": [] }]', 'fists']).then(
+          Utils.query(`INSERT INTO members (member_id, rpg_name, inventory, lumbering_item, battle_item) VALUES (?, ?, ?, ?, ?)`, [msg.member.id, RPG_name, '[{ "emerald": 0, "tools": [{"fists": 1}], "items": [] }]', 'fists', '[]']).then(
             Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, data => {
               msg.inlineReply(
                 Utils.createEmbed(
