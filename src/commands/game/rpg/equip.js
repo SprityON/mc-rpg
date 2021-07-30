@@ -49,14 +49,17 @@ module.exports = {
           switch (collected.first().content.toLowerCase()) {
             case 'lumber':
               Utils.query(`UPDATE members SET lumbering_item = '{"id": "${item_id}", "code": "${tool.code}"}' WHERE member_id = ${msg.member.id}`)
+              sendMessage()
               break;
 
             case 'fight':
               Utils.query(`UPDATE members SET battle_item = '{"id": "${item_id}", "code": "${tool.code}"}' WHERE member_id = ${msg.member.id}`)
+              sendMessage()
               break;
 
             case 'both':  
               Utils.query(`UPDATE members SET battle_item = '{"id": "${item_id}", "code": "${tool.code}"}', lumbering_item = '{"id": "${item_id}", "code": "${tool.code}"}' WHERE member_id = ${msg.member.id}`)
+              sendMessage()
               break;
 
             case 'cancel':
@@ -71,14 +74,18 @@ module.exports = {
         })
       } else if (item.usedFor.includes('mining')) {
         Utils.query(`UPDATE members SET mining_item = '{"id": "${item_id}", "code": "${tool.code}"}' WHERE member_id = ${msg.member.id}`)
+        sendMessage()
       } else if(item.usedFor.includes('combat')) {
         Utils.query(`UPDATE members SET battle_item = '{"id": "${item_id}", "code": "${tool.code}"}' WHERE member_id = ${msg.member.id}`)
+        sendMessage()
       }
 
-      const emote = BotClass.client.emojis.cache.find(e => e.name === item_id)
-      msg.inlineReply(Utils.createEmbed([
-        [`TOOL EQUIPPED`, `Your ${emote} tool has been equipped!`]
-      ]))
+      function sendMessage() {
+        const emote = BotClass.client.emojis.cache.find(e => e.name === item_id)
+        msg.inlineReply(Utils.createEmbed([
+          [`TOOL EQUIPPED`, `Your ${emote} tool has been equipped!`]
+        ]))
+      }
     })
   },
 
