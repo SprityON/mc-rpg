@@ -1,4 +1,4 @@
-const BotClass = require('../../BotClass')
+const Bot = require('../../Bot')
 const Utils = require('../../Utils')
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
 
     let categories = require(`../categories.json`)
     const commandCategoryFolders = readdirSync('commands').filter(file => !file.includes('.'))
-    let embed = new BotClass.Discord.MessageEmbed()
+    let embed = new Bot.Discord.MessageEmbed()
     if (!args[0]) {
         embed.setTitle(`Commands`)
         .setFooter(`For more specific information: help (category/command)`)
@@ -30,7 +30,7 @@ module.exports = {
         categories.forEach(c => {
           if (f == c.category) {
             let emote = c.emote
-            if (!c.emote.includes(':')) emote = BotClass.client.emojis.cache.find(e => e.name === c.emote)
+            if (!c.emote.includes(':')) emote = Bot.client.emojis.cache.find(e => e.name === c.emote)
             embed.addField(`${emote} ${c.title.charAt(0).toUpperCase() + c.title.slice(1)}`, `\`${c.usage}\``, true)
           }
         })
@@ -99,7 +99,7 @@ module.exports = {
         embed.setDescription(text)
         msg.channel.send(embed)
       } else {
-        const command = BotClass.Commands.find(cmd => cmd.name === args[0])
+        const command = Bot.Commands.find(cmd => cmd.name === args[0])
 
         let aliases = ''
         let i = 0

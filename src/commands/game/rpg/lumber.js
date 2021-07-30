@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass');
+const Bot = require('../../../Bot');
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
       const RPG_name = data[0][0].rpg_name
 
       const axe = JSON.parse(data[0][0].lumbering_item)
-      const emote_axe = BotClass.client.emojis.cache.find(e => e.name === axe.id);
+      const emote_axe = Bot.client.emojis.cache.find(e => e.name === axe.id);
 
       const rarity = [
         { "rarity": "common", "chance": 10000 },
@@ -63,7 +63,7 @@ module.exports = {
         ], { description: `${emote_axe} **${RPG_name}** went lumbering`, color: embedColor }
       ))
 
-      let embed = new BotClass.Discord.MessageEmbed()
+      let embed = new Bot.Discord.MessageEmbed()
         .setColor(embedColor)
         .setDescription(`${emote_axe} **${RPG_name}** went lumbering`)
 
@@ -75,7 +75,7 @@ module.exports = {
       i = 1
       let broken_axe_text = ''
       lumbered.forEach(res => {
-        let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
+        let emote = Bot.client.emojis.cache.find(e => e.name === res.id)
 
         if (res.chopped === true) {
           if (lumbered.length <= 1 || i == lumbered.length) {

@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass')
+const Bot = require('../../../Bot')
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -81,7 +81,7 @@ module.exports = {
       }
 
       function sendMessage() {
-        const emote = BotClass.client.emojis.cache.find(e => e.name === item_id)
+        const emote = Bot.client.emojis.cache.find(e => e.name === item_id)
         msg.inlineReply(Utils.createEmbed([
           [`TOOL EQUIPPED`, `Your ${emote} tool has been equipped!`]
         ]))

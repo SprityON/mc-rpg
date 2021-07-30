@@ -1,1 +1,1 @@
-require('./BotClass.js');
+require('./Bot.js');

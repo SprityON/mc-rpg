@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass')
+const Bot = require('../../../Bot')
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -25,7 +25,7 @@ module.exports = {
       ))
 
       const pickaxe = JSON.parse(data[0][0].mining_item)
-      const emote_pickaxe = BotClass.client.emojis.cache.find(e => e.name === pickaxe.id);
+      const emote_pickaxe = Bot.client.emojis.cache.find(e => e.name === pickaxe.id);
 
       let mined = [];
 
@@ -78,7 +78,7 @@ module.exports = {
         ], { description: `${emote_pickaxe} **${RPG_name}** went mining`, color: embedColor }
       ))
 
-      let embed = new BotClass.Discord.MessageEmbed()
+      let embed = new Bot.Discord.MessageEmbed()
         .setDescription(`${emote_pickaxe} **${RPG_name}** went mining`)
         .setColor(embedColor)
 
@@ -100,7 +100,7 @@ module.exports = {
 
       i = 0
       for (let res of notMined) {
-        let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
+        let emote = Bot.client.emojis.cache.find(e => e.name === res.id)
 
         notMined.length - 1 <= 1 || i == notMined.length - 1
           ? embedTriedMiningFailed += `${emote} **${res.amount}**`
@@ -112,7 +112,7 @@ module.exports = {
       i = 1
       let broken_pickaxe_text = ''
       mined.forEach(res => {
-        let emote = BotClass.client.emojis.cache.find(e => e.name === res.id)
+        let emote = Bot.client.emojis.cache.find(e => e.name === res.id)
         
         if (res.mined === true) {
           if (mined.length <= 1 || i == mined.length) {
@@ -168,7 +168,7 @@ module.exports = {
         const selectedMob = hostileMobs[Math.floor(Math.random() * hostileMobs.length - 1) + 1]
         let mobHealth = selectedMob.hp
 
-        let embed = new BotClass.Discord.MessageEmbed()
+        let embed = new Bot.Discord.MessageEmbed()
         .setColor('#ff0000').setAuthor(`${RPG_name} encountered a ${selectedMob.name}`, msg.author.avatarURL({dynamic: true}))
 
         switch (selectedMob.type) {
@@ -183,7 +183,7 @@ module.exports = {
               doDamage()
 
               function win(msg, content, mob) {
-                msg.inlineReply(new BotClass.Discord.MessageEmbed()
+                msg.inlineReply(new Bot.Discord.MessageEmbed()
                   .setAuthor(`${RPG_name} killed a ${mob.name}`, msg.author.avatarURL({ dynamic: true }))
                   .addField(`YOU GOT`, content)
                 )
@@ -220,7 +220,7 @@ module.exports = {
 
                   let lostAmount = lost()
                   
-                  let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(item)[0])
+                  let emoji = Bot.client.emojis.cache.find(e => e.name === Object.keys(item)[0])
 
                   if (!((i + 1) / 3).toString().includes('.')) {
                     text += `${emoji} ${lostAmount}\n`
@@ -278,7 +278,7 @@ module.exports = {
 
                         if (random <= drop.chance) {
                           let dropAmount = Math.floor(Math.random() * drop.maxAmount) + 1
-                          let emote = BotClass.client.emojis.cache.find(e => e.name === drop.id)
+                          let emote = Bot.client.emojis.cache.find(e => e.name === drop.id)
 
                           win(collected.first(), `${emote} ${dropAmount}`, selectedMob)
                           return Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', mining_item = '${data[0][0].mining_item}' WHERE member_id = ${msg.member.id}`);

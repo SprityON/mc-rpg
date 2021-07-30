@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const Utils = require('./Utils');
 
-module.exports = new class BotClass {
+module.exports = new class Bot {
 	constructor() {
 		this.Discord = require('discord.js');
 		this.Commands = new this.Discord.Collection();
@@ -27,19 +27,17 @@ module.exports = new class BotClass {
 	async ready(client) {
 		console.log(`Ready as ${client.user.tag}!\n`)
 
-		client.user.setActivity('mc?help', { type: 'LISTENING' })
+		client.user.setActivity(`${client.guilds.cache.size} servers`, { type: 'WATCHING' })
 		
 		Utils.load();
 	}
 
 	guildCreate(guild) {
-		guild.channels.cache.find(channel => channel.id === guild.channels.cache.filter(chan => chan.type === 'text').first().id).send(
-			Utils
-				.createEmbed(
-				[
-					['Thanks for adding me to your server!', 'Want to change some settings? Use `mc!help`']
-				], { color: Utils.botRoleColor(guild) }
-				))
+		guild.channels.cache.find(channel => channel.id === guild.channels.cache.filter(chan => chan.name.includes('welcome')).first().id).send(
+			Utils.createEmbed([
+				['Thanks for adding me to your server!', 
+				'Want to change some settings? Use `mc?help`']
+			]))
 				
 			return Utils.query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
 	}

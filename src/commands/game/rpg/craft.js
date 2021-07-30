@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass')
+const Bot = require('../../../Bot')
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -105,7 +105,7 @@ module.exports = {
             let alt_text = `${inventory[1].items[i][recipe.id]}`
             if (inventory[1].items[i][recipe.id] <= 0) (inventory[1].items.splice(i,1), alt_text = '0')
 
-            let emote = BotClass.client.emojis.cache.find(e => e.name === recipe.id)
+            let emote = Bot.client.emojis.cache.find(e => e.name === recipe.id)
             
             if (lostItemsAmount == userRecipeItems.length) lostItems += `${emote} ${alt_text}`
             if (lostItemsAmount < userRecipeItems.length) lostItems += `${emote} ${alt_text}, `
@@ -113,7 +113,7 @@ module.exports = {
         }
       })
 
-      let craftedItemEmote = BotClass.client.emojis.cache.find(e => e.name === item.id)
+      let craftedItemEmote = Bot.client.emojis.cache.find(e => e.name === item.id)
 
       let craftedItem 
       if (item.category === 'tools') {
@@ -186,7 +186,7 @@ module.exports = {
             }
 
             function sendMessage() {
-              const emote = BotClass.client.emojis.cache.find(e => e.name === itemToCraft)
+              const emote = Bot.client.emojis.cache.find(e => e.name === itemToCraft)
               msg.inlineReply(Utils.createEmbed([
                 [`TOOL EQUIPPED`, `Your ${emote} tool has been equipped!`]
               ]))

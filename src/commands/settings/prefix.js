@@ -24,7 +24,7 @@ module.exports = {
           ]
         ))
 
-      msg.channel.send(`Are you sure you want to change your MCRPG's server prefix to: \`${newPrefix}\`? (y/n)`);
+      msg.channel.send(`Are you sure you want to change your server prefix to: \`${newPrefix}\`? (y/n)`);
 
       const filter = m => m.author.id === msg.author.id;
       msg.channel.awaitMessages(filter, { timeout: 30000, max: 1 })

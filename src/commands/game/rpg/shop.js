@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass');
+const Bot = require('../../../Bot');
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
       const inventory = JSON.parse(result[0][0].inventory);
 
       let emeraldAmount = Utils.emeraldAmount(inventory[0]['emerald'])
-      let emeraldEmote = BotClass.client.emojis.cache.find(e => e.name === 'emerald');
+      let emeraldEmote = Bot.client.emojis.cache.find(e => e.name === 'emerald');
 
       Utils.embedList({
         title: `**SHOP ───────────── ${emeraldEmote} ${emeraldAmount}**`,

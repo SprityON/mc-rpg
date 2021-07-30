@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass');
+const Bot = require('../../../Bot');
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -165,7 +165,7 @@ module.exports = {
           if (!inventory[1].tools.find(item.id)) {
             inventory[1].tools.push({ [item.id]: item.amount })
 
-            let emote = BotClass.client.emojis.cache.find(e => e.name === item.id)
+            let emote = Bot.client.emojis.cache.find(e => e.name === item.id)
 
             if (i === refundedItems.length) {
               text_refundedItems += `${emote} ${item.amount}`
@@ -175,7 +175,7 @@ module.exports = {
           } else {
             inventory[1].tools[item.placement][item.id] += item.amount
 
-            let emote = BotClass.client.emojis.cache.find(e => e.name === item.id)
+            let emote = Bot.client.emojis.cache.find(e => e.name === item.id)
 
             if (i === refundedItems.length) {
               text_refundedItems += `${emote} ${item.amount}`
@@ -187,7 +187,7 @@ module.exports = {
           if (!inventory[1].items.find(e => Object.keys(e)[0] === item.id)) {
             inventory[1].items.push({ [item.id]: item.amount })
 
-            let emote = BotClass.client.emojis.cache.find(e => e.name === item.id)
+            let emote = Bot.client.emojis.cache.find(e => e.name === item.id)
 
             if (i === refundedItems.length) {
               text_refundedItems += `${emote} ${item.amount}`
@@ -197,7 +197,7 @@ module.exports = {
           } else {
             inventory[1].items[item.placement][item.id] += item.amount
 
-            let emote = BotClass.client.emojis.cache.find(e => e.name === item.id)
+            let emote = Bot.client.emojis.cache.find(e => e.name === item.id)
 
             if (i === refundedItems.length) {
               text_refundedItems += `${emote} ${item.amount}`

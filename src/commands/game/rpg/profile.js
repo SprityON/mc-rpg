@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass')
+const Bot = require('../../../Bot')
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
   timeout: 1000,
 
   execute(msg, args) {
-    let embed = new BotClass.Discord.MessageEmbed()
+    let embed = new Bot.Discord.MessageEmbed()
 
     Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, result => {
       const itemsJSON = require('./items/items.json')
@@ -26,7 +26,7 @@ module.exports = {
         if (JSON.parse(result[0][0].lumbering_item).code) {
           console.log(inventory[1].tools[1])
           let axe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].lumbering_item).id)
-          let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(axe)[0])
+          let emoji = Bot.client.emojis.cache.find(e => e.name === Object.keys(axe)[0])
 
           if (!axe.code) return `${emoji}`
           return `${emoji} (${progressBar.filledBar(axe.maxDurability, axe.currentDurability, 5)[0]})`
@@ -35,7 +35,7 @@ module.exports = {
       const equipped_pickaxe = () => {
         if (JSON.parse(result[0][0].mining_item).id) {
           let pickaxe = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].mining_item).id)
-          let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(pickaxe)[0])
+          let emoji = Bot.client.emojis.cache.find(e => e.name === Object.keys(pickaxe)[0])
 
           return `${emoji} (${progressBar.filledBar(pickaxe.maxDurability, pickaxe.currentDurability, 5)[0]})`
         } else return 'None'
@@ -43,7 +43,7 @@ module.exports = {
       const equipped_sword = () => {
         if (JSON.parse(result[0][0].battle_item).id) {
           let sword = inventory[1].tools.find(tool => Object.keys(tool)[0] === JSON.parse(result[0][0].battle_item).id)
-          let emoji = BotClass.client.emojis.cache.find(e => e.name === Object.keys(sword)[0])
+          let emoji = Bot.client.emojis.cache.find(e => e.name === Object.keys(sword)[0])
 
           return `${emoji} (${progressBar.filledBar(sword.maxDurability, sword.currentDurability, 5)[0]})`
         } else return 'None'
@@ -61,7 +61,7 @@ module.exports = {
         itemAmount++
       })
 
-      let emerald = BotClass.client.emojis.cache.find(e => e.name === 'emerald')
+      let emerald = Bot.client.emojis.cache.find(e => e.name === 'emerald')
 
       embed.setAuthor(`${rpg_name}'s profile`, msg.author.avatarURL({dynamic: true}))
       embed.addField(`Inventory`, `Total items: ${itemAmount} items\nWorth ${emerald} ${Utils.emeraldAmount(inventoryWorth)}`, true)

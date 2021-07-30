@@ -1,11 +1,11 @@
-const BotClass = require('./BotClass');
+const Bot = require('./Bot');
 
 module.exports = class Utils {
 
   /* STARTUP METHODS AND PROPERTIES */
 
   static load() {
-    const BotClass = require('./BotClass');
+    const Bot = require('./Bot');
     const { readdirSync, lstatSync } = require('fs');
 
     readdirSync(`./commands`).filter(selected => !selected.endsWith(
@@ -22,10 +22,10 @@ module.exports = class Utils {
             .forEach(commandFile2 => {
               if (commandFile2.endsWith('.js')) {
                 command = require(`./commands/${category}/${commandFile}/${commandFile2}`)
-                BotClass.Commands.set(command.name, command);
+                Bot.Commands.set(command.name, command);
               }
           })
-        } else BotClass.Commands.set(command.name, command);
+        } else Bot.Commands.set(command.name, command);
 
       })
     })
@@ -34,7 +34,7 @@ module.exports = class Utils {
       .filter(selected => selected.endsWith('.js'))
       .forEach(e => {
 
-        BotClass.client["on"]
+        Bot.client["on"]
           (Utils.getFileName(e),
             (...args) => {
               if (args[0].author.bot && args[0].author.bot === true) return
@@ -96,9 +96,9 @@ module.exports = class Utils {
     footer: false,
     setFooter: ''
   }) {
-    const BotClass = require('./BotClass');
+    const Bot = require('./Bot');
 
-    let embed = new BotClass.Discord.MessageEmbed()
+    let embed = new Bot.Discord.MessageEmbed()
       .setColor(process.env.EMBEDCOLOR);
 
     const colors = [
@@ -168,7 +168,7 @@ module.exports = class Utils {
   }
 
   static botRoleColor() {
-    const me = require('./BotClass').client.guilds.cache.first().me
+    const me = require('./Bot').client.guilds.cache.first().me
     return me.roles.cache.first() ? me.roles.cache.first().color : process.env.EMBEDCOLOR 
   }
 
@@ -233,7 +233,7 @@ module.exports = class Utils {
     filter
   }, callback) {
     const Utils = this
-    const BotClass = require('./BotClass');
+    const Bot = require('./Bot');
 
       switch (type) {
         case 'inventory':
@@ -251,8 +251,8 @@ module.exports = class Utils {
             let i = 0;
             let testI = 0;
 
-            //let emeraldEmote = BotClass.client.emojis.cache.find(e => e.name === 'emerald');
-            let embed = new BotClass.Discord.MessageEmbed()
+            //let emeraldEmote = Bot.client.emojis.cache.find(e => e.name === 'emerald');
+            let embed = new Bot.Discord.MessageEmbed()
               .setColor(process.env.EMBEDCOLOR)
               .setDescription(title.toString())
 
@@ -379,7 +379,7 @@ module.exports = class Utils {
                 totalItemsAmountIndividual += foundItem.amount
 
                 if (Continue == true) {
-                  let emote = BotClass.client.emojis.cache.find(e => e.name === foundItem.id);
+                  let emote = Bot.client.emojis.cache.find(e => e.name === foundItem.id);
 
                   /* testI will check if this variable is the same as i
                   *  if it is not the same, then the user wants to see another page
@@ -431,7 +431,7 @@ module.exports = class Utils {
             let i = 0;
             let testI = 0;
 
-            let embed = new BotClass.Discord.MessageEmbed()
+            let embed = new Bot.Discord.MessageEmbed()
               .setColor(process.env.EMBEDCOLOR)
 
             if (!currPage) currPage = 1;
@@ -454,7 +454,7 @@ module.exports = class Utils {
 
               let counter = 1
               item.recipe.forEach(material => {
-                let emote = BotClass.client.emojis.cache.find(e => e.name === Object.keys(material)[0]);
+                let emote = Bot.client.emojis.cache.find(e => e.name === Object.keys(material)[0]);
 
                 counter === item.recipe.length
                   ? recipeText += `${emote} ${Object.values(material)[0]}`
@@ -466,7 +466,7 @@ module.exports = class Utils {
               totalItemsAmount++
 
               if (Continue == true) {
-                let emote = BotClass.client.emojis.cache.find(e => e.name === item.id);
+                let emote = Bot.client.emojis.cache.find(e => e.name === item.id);
 
                 if (testI !== i) { testI++ } else {
                   pageItemsAmount++
@@ -512,7 +512,7 @@ module.exports = class Utils {
             let i = 0;
             let testI = 0;
 
-            let embed = new BotClass.Discord.MessageEmbed()
+            let embed = new Bot.Discord.MessageEmbed()
               .setColor(process.env.EMBEDCOLOR)
 
             if (!currPage) currPage = 1;
@@ -531,7 +531,7 @@ module.exports = class Utils {
 
             let Continue = true
 
-            let emeraldEmote = BotClass.client.emojis.cache.find(e => e.name === 'emerald')
+            let emeraldEmote = Bot.client.emojis.cache.find(e => e.name === 'emerald')
             for (let item of allJSON) {
 
               totalItemsAmount++
@@ -542,7 +542,7 @@ module.exports = class Utils {
 
                   if (pageItemsAmount > showAmountOfItems) { Continue = false; continue; }
 
-                  const emote = BotClass.client.emojis.cache.find(e => e.name === item.emoji)
+                  const emote = Bot.client.emojis.cache.find(e => e.name === item.emoji)
 
                   text += `${emote} **${item.name}**\n${item.description}\n\n**Price:** ${emeraldEmote} ${item.price}\n\n─────────\n\n`
 
@@ -581,7 +581,7 @@ module.exports = class Utils {
           let i = 0;
           let testI = 0;
 
-          let embed = new BotClass.Discord.MessageEmbed()
+          let embed = new Bot.Discord.MessageEmbed()
             .setColor(process.env.EMBEDCOLOR)
 
           if (!currPage) currPage = 1;

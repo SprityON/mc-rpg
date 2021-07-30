@@ -1,4 +1,4 @@
-const BotClass = require('../../../BotClass')
+const Bot = require('../../../Bot')
 const Utils = require('../../../Utils')
 
 module.exports = {
@@ -171,7 +171,7 @@ module.exports = {
         ))
       }
 
-      let emote_emerald = BotClass.client.emojis.cache.find(e => e.name === 'emerald')
+      let emote_emerald = Bot.client.emojis.cache.find(e => e.name === 'emerald')
 
       const emeraldAmount = Utils.emeraldAmount(inventory[0]['emerald'])
 

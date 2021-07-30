@@ -249,5 +249,15 @@
 		"category": "item",
 		"rarity": "legendary",
 		"mineableWith": ["iron_pickaxe", "diamond_pickaxe", "netherite_pickaxe"]
+	},
+	
+	{
+		"id": "gunpowder",
+		"name": "Gunpowder",
+		"sellPrice": 0.001,
+		"mineable": false,
+		"craftable": false,
+		"breakable": false,
+		"category": "item"
 	}
 ]
