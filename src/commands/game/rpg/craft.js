@@ -115,16 +115,87 @@ module.exports = {
 
       let craftedItemEmote = BotClass.client.emojis.cache.find(e => e.name === item.id)
 
+      let craftedItem 
       if (item.category === 'tools') {
 
         for (let i = 0; i < amount; i++) {
-          inventory[1].tools.push({
+          craftedItem = {
             [item.id]: 1,
             currentDurability: item.maxDurability,
             maxDurability: item.maxDurability,
             code: Utils.createToolCode(inventory[1])
-          })
+          }
+          inventory[1].tools.push(craftedItem)
         }
+
+        Utils.query(`UPDATE members SET inventory = '${JSON.stringify(inventory)}' WHERE member_id = ${msg.member.id}`);
+
+        msg.inlineReply(Utils.createEmbed(
+          [
+            [`CRAFTING COMPLETE`, `You now have **${lostItems}** and **${craftedItemEmote} ${amount * item.craftedAmount}**`]
+          ]
+        ))
+
+        msg.inlineReply(`Do you want to equip this tool? **(y/n)**`)
+        
+        let filter = m => m.author.id === msg.author.id
+        msg.channel.awaitMessages(filter, { time: 30000, max: 1 }).then(collected => {
+          if (collected.first().content.toLowerCase() === 'y') {
+
+            const item = allJSON.find(item => item.id === itemToCraft)
+            
+            if (item.usedFor.includes('lumber')) {
+              msg.inlineReply(`Do you want to use this item to \`lumber\`, \`fight\`, or \`both\`? Or \`cancel\``)
+
+              const filter = m => m.author.id === msg.author.id
+              msg.channel.awaitMessages(filter, { max: 1, time: 30000 }).then(collected => {
+                switch (collected.first().content.toLowerCase()) {
+                  case 'lumber':
+                    Utils.query(`UPDATE members SET lumbering_item = '{"id": "${itemToCraft}", "code": "${craftedItem.code}"}' WHERE member_id = ${msg.member.id}`)
+                    sendMessage()
+                    break;
+
+                  case 'fight':
+                    Utils.query(`UPDATE members SET battle_item = '{"id": "${itemToCraft}", "code": "${craftedItem.code}"}' WHERE member_id = ${msg.member.id}`)
+                    sendMessage()
+                    break;
+
+                  case 'both':
+                    Utils.query(`UPDATE members SET battle_item = '{"id": "${itemToCraft}", "code": "${craftedItem.code}"}', lumbering_item = '{"id": "${itemToCraft}", "code": "${craftedItem.code}"}' WHERE member_id = ${msg.member.id}`)
+                    sendMessage()
+                    break;
+
+                  case 'cancel':
+                    msg.channel.send(`Tool was not equipped.`)
+                    break;
+
+                  default:
+                    return msg.inlineReply(Utils.createEmbed([
+                      [`WRONG ARGUMENTS`, `That was not an option!`]
+                    ], { status: 'error' }))
+                }
+              }).catch(err => {
+                console.log(err)
+              })
+            } else if (item.usedFor.includes('mining')) {
+              Utils.query(`UPDATE members SET mining_item = '{"id": "${itemToCraft}", "code": "${craftedItem.code}"}' WHERE member_id = ${msg.member.id}`)
+              sendMessage()
+            } else if (item.usedFor.includes('combat')) {
+              Utils.query(`UPDATE members SET battle_item = '{"id": "${itemToCraft}", "code": "${craftedItem.code}"}' WHERE member_id = ${msg.member.id}`)
+              sendMessage()
+            }
+
+            function sendMessage() {
+              const emote = BotClass.client.emojis.cache.find(e => e.name === itemToCraft)
+              msg.inlineReply(Utils.createEmbed([
+                [`TOOL EQUIPPED`, `Your ${emote} tool has been equipped!`]
+              ]))
+            }
+          } else return msg.inlineReply(`Tool was not equipped!`)
+        }).catch(err => {
+          console.log(err)
+          return msg.inlineReply(`Tool was not equipped!`)
+        })
       } else if (item.category === 'item') {
         let foundItem = inventory[1].items.find(item2 => Object.keys(item2)[0] === item.id)
 
@@ -137,14 +208,6 @@ module.exports = {
           }
         }
       }
-
-      Utils.query(`UPDATE members SET inventory = '${JSON.stringify(inventory)}' WHERE member_id = ${msg.member.id}`);
-      
-      msg.inlineReply(Utils.createEmbed(
-        [
-          [`CRAFTING COMPLETE`, `You now have **${lostItems}** and **${craftedItemEmote} ${amount * item.craftedAmount}**`]
-        ]
-      ))
     })
   },
 

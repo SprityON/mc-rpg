@@ -30,9 +30,7 @@ module.exports = {
 
           if (!axe.code) return `${emoji}`
           return `${emoji} (${progressBar.filledBar(axe.maxDurability, axe.currentDurability, 5)[0]})`
-        } else {
-          return `None`
-        }
+        } else return `None`
       }
       const equipped_pickaxe = () => {
         if (JSON.parse(result[0][0].mining_item).id) {
