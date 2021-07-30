@@ -252,8 +252,11 @@ module.exports = {
                 let filter = m => m.author.id === msg.author.id
                 msg.channel.awaitMessages(filter, { max: 1, time: 10000 }).then(collected => {
                   if (collected.first().content.toLowerCase() !== randomText.toLowerCase()) {
-                    newInventory = loss(msg, newInventory, selectedMob)
-                    return Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', mining_item = '${data[0][0].mining_item}' WHERE member_id = ${msg.member.id}`);
+                    random = Math.floor(Math.random() * 4) + 1
+                    if (random == 4) {
+                      newInventory = loss(msg, newInventory, selectedMob)
+                      return Utils.query(`UPDATE members SET inventory = '${JSON.stringify(newInventory)}', mining_item = '${data[0][0].mining_item}' WHERE member_id = ${msg.member.id}`);
+                    } else return collected.first().inlineReply(`You successfully ran away from a **${selectedMob.name}**`)
                   }
 
                   else {

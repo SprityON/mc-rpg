@@ -13,19 +13,22 @@ module.exports = {
   timeout: 1000,
 
   execute(msg, args) {
-    const allJSON = require('./items/items.json').concat(require('./tools/tools.json'))
-    const item_id = args[0].toLowerCase()
+    Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, result => {
+      const allJSON = require('./items/items.json').concat(require('./tools/tools.json'))
+      const inventory = JSON.parse(result[0][0].inventory)
+      const item_id = args[0].toLowerCase()
 
-    const item = allJSON.find(item => item.id === item_id)
-    if (item) {
-      if (item.usedFor.includes('lumber')) {
-        Utils.query(`UPDATE members SET lumbering_item = '' WHERE member_id = ${msg.member.id}`)
-      } else if (item.usedFor.includes('mining')) {
-        Utils.query(`UPDATE members SET mining_item = '' WHERE member_id = ${msg.member.id}`)
-      }
-    } else return msg.inlineReply(Utils.createEmbed([
-      [`NOT FOUND`,`You do not have that item/tool in your inventory!`]
-    ], { status: 'error' }))
+      const item = allJSON.find(item => item.id === item_id)
+      if (item) {
+        if (item.usedFor.includes('lumber')) {
+          Utils.query(`UPDATE members SET lumbering_item = '' WHERE member_id = ${msg.member.id}`)
+        } else if (item.usedFor.includes('mining')) {
+          Utils.query(`UPDATE members SET mining_item = '' WHERE member_id = ${msg.member.id}`)
+        }
+      } else return msg.inlineReply(Utils.createEmbed([
+        [`NOT FOUND`, `You do not have that item/tool in your inventory!`]
+      ], { status: 'error' }))
+    })
   },
 
   help: {

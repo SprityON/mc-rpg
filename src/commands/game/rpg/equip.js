@@ -83,7 +83,7 @@ module.exports = {
   },
 
   help: {
-    enabled: false,
+    enabled: true,
     title: '',
     description: ``,
   }
