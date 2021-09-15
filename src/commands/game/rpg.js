@@ -1,4 +1,5 @@
-const Utils = require('../../Utils')
+const DB = require("../../classes/database/DB")
+const Utils = require("../../classes/utilities/Utils")
 
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
@@ -14,11 +15,11 @@ module.exports = {
   handler: true,
 
   async execute(msg, args) {
-    await Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, member => {
+    await DB.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`).then(member => {
       var arguments = args
 
       if (!member[0][0] && args[0].toLowerCase() !== 'create') {
-        Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, result => {
+        DB.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`).then(result => {
           return msg.inlineReply(
             Utils.createEmbed(
               [
@@ -39,7 +40,7 @@ module.exports = {
       let command = args[0].toLowerCase()
 
       try {
-        const files = Utils.modules.fs.readdirSync(`${__dirname}/rpg`).filter(file => file.endsWith('.js'));
+        const files = require('fs').readdirSync(`${__dirname}/rpg`).filter(file => file.endsWith('.js'));
 
         for (let file of files) {
           const cmdAliases = require(`./rpg/${file}`);
@@ -70,13 +71,12 @@ module.exports = {
         console.log(err);
 
         return msg.channel.send(
-          Utils.createEmbed(
-            [
-              [`ERROR`, `\`${command}\` is not a command!`]
-            ], { status: 'error' }
-          ))
-        }
-      })
+          Utils.createEmbed([
+            [`ERROR`, `\`${command}\` is not a command!`]
+          ], { status: 'error' }
+        ))
+      }
+    })
   },
 
   help: {

@@ -1,4 +1,5 @@
-const Utils = require('../../Utils');
+const DB = require("../../classes/database/DB")
+const Utils = require("../../classes/utilities/Utils")
 
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
@@ -8,30 +9,31 @@ module.exports = {
       callback(data)
     }, guild_id)
   },
-  aliases: ['p'],
+  aliases: [],
   permissions: ['SEND_MESSAGES', 'ADMINISTRATOR'],
   timeout: 1000,
 
-  execute(msg, args) {
-    Utils.query(`SELECT prefix FROM guilds WHERE guild_id = ${msg.guild.id}`, result => {
-      const prefix = result[0][0].prefix;
-      const newPrefix = args[0];
+  async execute(msg, args) {
 
-      if (!newPrefix) return msg.channel.send(
-        Utils.createEmbed(
-          [
-            [`Prefix Settings`, `Change your server prefix like so:\n\`${prefix}prefix <your-prefix>\``]
-          ]
-        ))
+    const prefix = await DB.guild.getPrefix(msg.guild.id)
 
-      msg.channel.send(`Are you sure you want to change your server prefix to: \`${newPrefix}\`? (y/n)`);
+    const newPrefix = args[0];
 
-      const filter = m => m.author.id === msg.author.id;
-      msg.channel.awaitMessages(filter, { timeout: 30000, max: 1 })
+    if (!newPrefix) return msg.channel.send(
+      Utils.createEmbed(
+        [
+          [`Prefix Settings`, `Change your server prefix like so:\n\`${prefix}prefix <your-prefix>\``]
+        ]
+      ))
+
+    msg.channel.send(`Are you sure you want to change your server prefix to: \`${newPrefix}\`? (y/n)`);
+
+    const filter = m => m.author.id === msg.author.id;
+    msg.channel.awaitMessages(filter, { timeout: 30000, max: 1 })
       .then(collected => {
         if (collected.first().content.toLowerCase() === 'y') {
 
-          Utils.query(`UPDATE guilds SET prefix = ? WHERE guild_id = '${msg.guild.id}'`, [newPrefix]).then(
+          DB.query(`UPDATE guilds SET prefix = ? WHERE guild_id = '${msg.guild.id}'`, [newPrefix]).then(
             msg.channel.send(
               Utils.createEmbed(
                 [
@@ -43,7 +45,6 @@ module.exports = {
 
         } else return msg.channel.send(`Cancelled for **${msg.author.username}**!`);
       })
-    })
   },
 
   help: {

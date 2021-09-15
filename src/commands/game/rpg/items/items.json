@@ -254,7 +254,37 @@
 	{
 		"id": "gunpowder",
 		"name": "Gunpowder",
-		"sellPrice": 0.001,
+		"sellPrice": 0.002,
+		"mineable": false,
+		"craftable": false,
+		"breakable": false,
+		"category": "item"
+	},
+	
+	{
+		"id": "rotten_flesh",
+		"name": "Rotten Flesh",
+		"sellPrice": 0.002,
+		"mineable": false,
+		"craftable": false,
+		"breakable": false,
+		"category": "item"
+	},
+	
+	{
+		"id": "carrot",
+		"name": "Carrot",
+		"sellPrice": 0.002,
+		"mineable": false,
+		"craftable": false,
+		"breakable": false,
+		"category": "item"
+	},
+	
+	{
+		"id": "potato",
+		"name": "Potato",
+		"sellPrice": 0.002,
 		"mineable": false,
 		"craftable": false,
 		"breakable": false,

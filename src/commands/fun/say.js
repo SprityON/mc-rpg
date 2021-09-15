@@ -1,14 +1,10 @@
-const Utils = require('../../Utils')
+const Utils = require("../../classes/utilities/Utils")
 
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
-  usage(guild_id, callback) {
-    Utils.getCmdUsage(__filename, __dirname, data => {
-      callback(data)
-    }, guild_id)
-  },
-  aliases: ['mimick'],
+  usage: '<message>',
+  aliases: [],
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
 
@@ -19,7 +15,8 @@ module.exports = {
       Utils.createEmbed(
         [
           [
-            `${msg.author.username} said:`, `\`\`\`` + msg.content.slice(msg.content.split(" ")[0].length + 1) + `\`\`\``
+            `${msg.author.username} said:`, 
+            `\`\`\`` + msg.content.slice(msg.content.split(" ")[0].length + 1) + `\`\`\``
           ]
         ], { color: Utils.randomColor() }
       )
@@ -27,8 +24,8 @@ module.exports = {
   },
 
   help: {
-    enabled: false,
+    enabled: true,
     title: 'Say',
-    description: `I will mimick your message!`
+    description: `I will say your message!`
   }
 }

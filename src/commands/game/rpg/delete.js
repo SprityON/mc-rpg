@@ -1,4 +1,5 @@
-const Utils = require('../../../Utils')
+const DB = require("../../../classes/database/DB")
+const Utils = require("../../../classes/utilities/Utils")
 
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
@@ -12,8 +13,8 @@ module.exports = {
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
 
-  execute(msg, args) {
-    Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, data => {
+  async execute(msg, args) {
+    DB.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`).then(data => {
       if (!data[0][0]) return msg.inlineReply(`You don't have an account yet!`)
 
       msg.inlineReply(`Are you sure you want to remove your MCRPG account? (y/n)`);
@@ -23,7 +24,7 @@ module.exports = {
         .then(collected => {
           if (collected.first().content.toLowerCase() === 'n') return collected.first().inlineReply('Cancelled!');
 
-          Utils.query(`DELETE FROM members WHERE member_id = ${msg.member.id}`)
+          DB.query(`DELETE FROM members WHERE member_id = ${msg.member.id}`)
           msg.inlineReply(Utils.createEmbed(
             [
               [`Creeper? Aww man...`, `Your account has blown up! (no but seriously, it's gone)`]

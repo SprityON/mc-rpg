@@ -1,5 +1,5 @@
 const Bot = require('../../Bot')
-const Utils = require('../../Utils')
+const Utils = require("../../classes/utilities/Utils")
 
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
@@ -63,7 +63,6 @@ module.exports = {
       }
 
       if (isCategory) {
-        console.log('hi')
         embed.setTitle(`${args[0].slice(0,1).toUpperCase() + args[0].slice(1,args[0].length)} Commands`)
 
         let i = 1
@@ -101,6 +100,8 @@ module.exports = {
       } else {
         const command = Bot.Commands.find(cmd => cmd.name === args[0])
 
+        if (!command.help.enabled) return
+
         let aliases = ''
         let i = 0
         command.aliases.forEach(alias => {
@@ -125,12 +126,12 @@ module.exports = {
 
         command.usage(msg.guild.id, prefix => {
 
-          embed.setTitle(`help ${command.name}`)
-            .addField(`Description`, `${command.help.description}`)
-            .addField(`Usage`, `\`${prefix}${command.name}\``)
-            .addField(`Aliases`, `${aliases}`)
+          embed.setDescription(`**${prefix}help ${command.help.title||'no title'}**`)
+            .addField(`Description`, `${command.help.description||'no description'}`)
+            .addField(`Usage`, `\`${prefix}${command.name||'no usage'}\``)
+            .addField(`Aliases`, `${aliases||'no alias'}`)
             .addField(`Cooldown`, `${command.timeout / 1000}s`)
-            .addField(`Permissions`, `${permissions}`)
+            .addField(`Permissions`, `\`\`\`${permissions}\`\`\``)
 
           msg.channel.send(embed)
         })

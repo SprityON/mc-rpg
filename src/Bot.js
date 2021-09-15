@@ -1,11 +1,13 @@
-require('dotenv').config();
+const DB = require('./classes/database/DB');
+const Utils = require('./classes/utilities/Utils');
 
-const Utils = require('./Utils');
+require('dotenv').config();
 
 module.exports = new class Bot {
 	constructor() {
 		this.Discord = require('discord.js');
-		this.Commands = new this.Discord.Collection();
+		this.Commands = new this.Discord.Collection(); 
+		
 
 		this.client = new this.Discord.Client({ allowedMentions: { repliedUser: false } });
 		this.run(this.client);
@@ -17,14 +19,14 @@ module.exports = new class Bot {
 	 */
 
 	run(client) {
-		require("./replyInline")
+		require("./classes/other/replyInline")
 		client.login(process.env.TOKEN);
-		client.on('ready', this.ready.bind(this, client))
+		client.once('ready', this.ready.bind(this, client))
 			.on('guildCreate', this.guildCreate.bind(this))
 			.on('guildDelete', this.guildDelete.bind(this))
 	}
 
-	async ready(client) {
+	ready(client) {
 		console.log(`Ready as ${client.user.tag}!\n`)
 
 		client.user.setActivity(`${client.guilds.cache.size} servers`, { type: 'WATCHING' })
@@ -39,10 +41,10 @@ module.exports = new class Bot {
 				'Want to change some settings? Use `mc?help`']
 			]))
 				
-			return Utils.query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
+		return DB.query(`INSERT INTO guilds (guild_id, prefix) VALUES ('${guild.id}', '${require('./config.json').defaultPrefix}')`);
 	}
 
 	guildDelete(guild) {
-		Utils.query(`DELETE FROM guilds WHERE guild_id = ${guild.id}`);
+		DB.query(`DELETE FROM guilds WHERE guild_id = ${guild.id}`);
 	}
 }

@@ -1,22 +1,17 @@
-const Utils = require('../../../Utils')
+const Utils = require("../../../classes/utilities/Utils")
 
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
-  usage(guild_id, callback) {
-    Utils.getCmdUsage(__filename, __dirname, data => {
-      callback(data)
-    }, guild_id)
-  },
+  usage: '',
   aliases: ['cr'],
   permissions: ['SEND_MESSAGES'],
   timeout: 2500,
 
-  execute(msg, args) {
+  async execute(msg, args) {
     const craftables = require('./items/items.json').concat(require('./tools/tools.json')).filter(item => item.craftable === true)
 
-    let page;
-    let filter;
+    let page, filter;
 
     isNaN(args[0])
       ? (filter = args[0], page = Math.floor(args[1]))

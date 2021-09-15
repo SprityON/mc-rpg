@@ -1,0 +1,125 @@
+[
+	{
+		"name": "Creeper",
+		"hp": 20,
+		"texts": [
+			"hiss type thiss",
+			"creeper aww man",
+			"creeper go poof",
+			"i go boom boom at times",
+			"tnt is my favorite block",
+			"my hobby is exploding",
+			"tnt has three letters",
+			"you aint getting my head"
+		],
+		"attacks": [
+			{ 
+				"name": "explode", 
+				"text": "Creeper blew up"
+			}
+		],
+		"drops": [
+			{
+				"id": "gunpowder", 
+				"name": "Gunpowder",
+				"chance": 10000,
+				"minAmount": 0,
+				"maxAmount": 2
+			}
+		]
+	},
+	
+	{
+		"name": "Zombie",
+		"hp": 20,
+		"attack": 4.5,
+		"texts": [
+			"hiss type thiss",
+			"creeper aww man",
+			"creeper go poof",
+			"i go boom boom at times",
+			"tnt is my favorite block",
+			"my hobby is exploding",
+			"tnt has three letters",
+			"you aint getting my head"
+		],
+		"attacks": [
+			{ 
+				"name": "bite", 
+				"text": "Zombie bit you"
+			}
+		],
+		"drops": [
+			{
+				"id": "rotten_flesh", 
+				"name": "Rotten Flesh",
+				"chance": 10000,
+				"minAmount": 0,
+				"maxAmount": 2
+			},
+			
+			{
+				"id": "iron_ingot", 
+				"name": "Iron Ingot",
+				"chance": 100,
+				"minAmount": 0,
+				"maxAmount": 2
+			},
+			
+			{
+				"id": "carrot", 
+				"name": "Carrot",
+				"chance": 100,
+				"minAmount": 0,
+				"maxAmount": 2
+			},
+			
+			{
+				"id": "potato", 
+				"name": "Potato",
+				"chance": 100,
+				"minAmount": 0,
+				"maxAmount": 2
+			}
+		]
+	},
+	
+	{
+		"name": "Skeleton",
+		"hp": 20,
+		"attack": 5,
+		"texts": [
+			"hiss type thiss",
+			"creeper aww man",
+			"creeper go poof",
+			"i go boom boom at times",
+			"tnt is my favorite block",
+			"my hobby is exploding",
+			"tnt has three letters",
+			"you aint getting my head"
+		],
+		"attacks": [
+			{ 
+				"name": "shoot", 
+				"text": "Skeleton shot you"
+			}
+		],
+		"drops": [
+			{
+				"id": "bone", 
+				"name": "Bone",
+				"chance": 10000,
+				"minAmount": 0,
+				"maxAmount": 2
+			},
+			
+			{
+				"id": "arrow", 
+				"name": "Arrow",
+				"chance": 10000,
+				"minAmount": 0,
+				"maxAmount": 2
+			}
+		]
+	}
+]

@@ -1,19 +1,19 @@
-const Utils = require('../Utils');
-const BotClass = require('../BotClass');
+const Bot = require('../Bot');
+const DB = require('../classes/database/DB');
+const Utils = require('../classes/utilities/Utils');
 
 module.exports = {
   async execute(msg) {
-      const command = msg.content.trim().split(/ +/)[0].toLowerCase();
-      const args = msg.content.trim().split(/ +/).slice(1, msg.content.length);
+    const command = msg.content.trim().split(/ +/)[0].toLowerCase();
+    const args = msg.content.trim().split(/ +/).slice(1, msg.content.length);
 
-      try {
-        let i = 0
+    try {
+      for (let cmd of Bot.Commands) {
+        cmd = cmd[1]
 
-        for (let cmd of BotClass.Commands) {
-          cmd = cmd[1]
+        let alias
 
-          let alias
-
+        if (cmd.aliases)
           cmd.aliases.forEach(a => {
             if (command.includes(a)) {
               if (command.indexOf(a) + 1 == command.length) {
@@ -22,69 +22,56 @@ module.exports = {
             }
           })
 
-          if (command.includes(cmd.name) || alias) {
-            guild_id = msg.guild.id
+        if (command.includes(cmd.name) || alias) {
+          const prefix = await DB.guild.getPrefix(msg.guild.id)
 
-            cmd.usage(guild_id, prefix => {
-              let cmd = Array.from(BotClass.Commands)[i][1]
+          if (!msg.content.startsWith(prefix)) return
 
-              if (!command.startsWith(prefix)) return
+          if (Bot.Commands.find(c => c.name === command.slice(prefix.length, command.length)))
+            cmd = Bot.Commands.find(c => c.name === command.slice(prefix.length, command.length))
 
-              if (BotClass.Commands.find(c => c.name === command.slice(prefix.length, command.length))) 
-                cmd = BotClass.Commands.find(c => c.name === command.slice(prefix.length, command.length))
+          const { readdirSync } = require('fs')
 
-              const { readdirSync } = Utils.modules.fs
+          let cmdFile
+          try {
+            cmdFile = require(`../commands/${cmd.category}/${cmd.name}`);
+          } catch (error) {
+            return msg.inlineReply(Utils.createEmbed(
+              [
+                [`ERROR`, `Command \`${command}\` does not exist!`]
+              ], { footer: true, status: 'error' }
+            ))
+          }
 
-              let cmdFile
+          let files = readdirSync(`./commands/${cmd.category}`)
 
-              try {
-                cmdFile = require(`../commands/${cmd.category}/${cmd.name}`);
-              } catch (error) {
-                var text;
-                text = `Command \`${command}\` does not exist!`
+          if (files.find(file => !file.endsWith('.js')) && cmdFile.handler) return cmdFile.execute(msg, args)
 
-                return msg.inlineReply(Utils.createEmbed(
-                  [
-                    [`ERROR`, `${text}`]
-                  ], { footer: true, status: 'error' }
-                ))
-              }
+          Utils.commandCooldown.execute(msg.member, cmdFile).then(([onCooldown, seconds]) => {
+            if (onCooldown)
+              return msg.inlineReply(`You have to wait ${seconds} seconds before using this command again!`);
 
-              let files = readdirSync(`./commands/${cmd.category}`)
-
-              if (files.find(file => !file.endsWith('.js')) && cmdFile.handler) return cmdFile.execute(msg, args)
-
-              Utils.commandCooldown.execute(msg.member, cmdFile).then(([onCooldown, seconds]) => {
-                if (onCooldown) {
-                  return msg.inlineReply(`You have to wait ${seconds} seconds before using this command again!`);
-                }
-
-                let enoughPermissions = true;
-                cmdFile.permissions.forEach(perm => {
-                  if (!msg.member.permissions.has(perm)) enoughPermissions = false;
-                })
-
-                enoughPermissions
-                  ? cmdFile.execute(msg, args)
-                  : msg.inlineReply(`**${msg.author.username}**, you do not have enough permissions to use this command!`)
-              })
+            let enoughPermissions = true;
+            cmdFile.permissions.forEach(perm => {
+              if (!msg.member.permissions.has(perm)) enoughPermissions = false;
             })
 
-            return
-          }
-          i++
+            enoughPermissions
+              ? cmdFile.execute(msg, args)
+              : msg.inlineReply(`**${msg.author.username}**, you do not have enough permissions to use this command!`)
+          })
+
+          return
         }
-      } catch (err) {
-        if (err) console.log(err)
-
-        var text;
-        command ? text = `Command \`${command}\` does not exist!` : text = `Well that is obviously no command XD`
-
-        msg.channel.send(Utils.createEmbed(
-          [
-            [`ERROR`, `${text}`]
-          ], { footer: true, status: 'error' }
-        ))
       }
+    } catch (err) {
+      if (err) console.log(err)
+
+      msg.channel.send(Utils.createEmbed(
+        [
+          [`ERROR`, `Command \`${command}\` does not exist!`]
+        ], { footer: true, status: 'error' }
+      ))
+    }
   }
 }

@@ -1,1 +1,1 @@
-require('./Bot.js');
+require('./Bot');

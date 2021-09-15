@@ -1,5 +1,6 @@
 const Bot = require('../../../Bot');
-const Utils = require('../../../Utils')
+const Player = require('../../../classes/game/Player');
+const Utils = require("../../../classes/utilities/Utils")
 
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
@@ -13,33 +14,31 @@ module.exports = {
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
 
-  execute(msg, args) {
-    let page;
-    let filter;
+  async execute(msg, args) {
+    let page, filter;
 
     isNaN(args[0])
       ? (filter = args[0], page = Math.floor(args[1]))
       : (filter = args[1], page = Math.floor(args[0]))
 
-    Utils.query(`SELECT * FROM members WHERE member_id = ${msg.member.id}`, async result => {
-      const inventory = JSON.parse(result[0][0].inventory);
+    const player = new Player(msg.member.id)
+    const inventory = await player.inventory
 
-      let emeraldAmount = Utils.emeraldAmount(inventory[0]['emerald'])
-      let emeraldEmote = Bot.client.emojis.cache.find(e => e.name === 'emerald');
+    let emeraldAmount = Utils.emeraldAmount(inventory[0]['emerald'])
+    let emeraldEmote = Bot.client.emojis.cache.find(e => e.name === 'emerald');
 
-      let listJSON = require(`./items/items.json`).concat(require(`./tools/tools.json`))
+    let listJSON = require(`./items/items.json`).concat(require(`./tools/tools.json`))
 
-      Utils.embedList({
-        title: `**𝗜𝗡𝗩𝗘𝗡𝗧𝗢𝗥𝗬 ───────────── ${emeraldEmote} ${emeraldAmount}**`,
-        type: 'inventory',
-        selectQuery: `SELECT * FROM members WHERE member_id = ${msg.member.id}`,
-        JSONlist: listJSON,
-        member: msg.member,
-        currPage: page,
-        showAmountOfItems: 5,
-        filter: filter
-      }, message => msg.inlineReply(message))
-    })
+    Utils.embedList({
+      title: `**𝗜𝗡𝗩𝗘𝗡𝗧𝗢𝗥𝗬 ───────────── ${emeraldEmote} ${emeraldAmount}**`,
+      type: 'inventory',
+      selectQuery: `SELECT * FROM members WHERE member_id = ${msg.member.id}`,
+      JSONlist: listJSON,
+      member: msg.member,
+      currPage: page,
+      showAmountOfItems: 5,
+      filter: filter
+    }, message => msg.inlineReply(message))
   },
 
   help: {
