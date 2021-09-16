@@ -4,17 +4,13 @@ const Utils = require("../../classes/utilities/Utils")
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
-  usage(guild_id, callback) {
-    Utils.getCmdUsage(__filename, __dirname, data => {
-      callback(data)
-    }, guild_id)
-  },
+  usage: '<command/category> <page>',
   aliases: [],
   permissions: ['SEND_MESSAGES'],
   timeout: 1000,
 
   execute(msg, args) {
-    const { readdirSync, lstatSync } = Utils.modules.fs
+    const { readdirSync, lstatSync } = require('fs')
 
     let categories = require(`../categories.json`)
     const commandCategoryFolders = readdirSync('commands').filter(file => !file.includes('.'))

@@ -6,11 +6,7 @@ const Utils = require("../../../classes/utilities/Utils")
 module.exports = {
   name: Utils.getCmdName(__filename, __dirname),
   category: Utils.getCmdCategory(__filename),
-  usage(guild_id, callback) {
-    Utils.getCmdUsage(__filename, __dirname, data => {
-      callback(data)
-    }, guild_id)
-  },
+  usage: '',
   aliases: ['l'],
   permissions: ['SEND_MESSAGES'],
   timeout: 30000,
@@ -20,7 +16,8 @@ module.exports = {
     const inventory = await player.inventory
 
     const embedColor = '9cdd84'
-    const emote_axe = Bot.client.emojis.cache.find(e => e.name === player.axe.id);
+    const axe = await player.axe
+    const emote_axe = Bot.client.emojis.cache.find(e => e.name === axe.id);
 
     const rarity = [
       { "rarity": "common", "chance": 10000 },
@@ -33,7 +30,7 @@ module.exports = {
 
     const itemJSON = require('./items/items.json')
     const toolsJSON = require('./tools/tools.json')
-    const userTool = toolsJSON.find(tool => tool.id === player.axe.id)
+    const userTool = toolsJSON.find(tool => tool.id === axe.id)
 
     let lumbered = []
     for (let item of itemJSON) {
@@ -61,12 +58,12 @@ module.exports = {
     if (lumbered.length == 0 || !lumbered) return msg.inlineReply(Utils.createEmbed(
       [
         ['AWW MAN...', `You got nothing!`]
-      ], { description: `${emote_axe} **${player.name}** went lumbering`, color: embedColor }
+      ], { description: `${emote_axe} **${await player.name}** went lumbering`, color: embedColor }
     ))
 
     let embed = new Bot.Discord.MessageEmbed()
       .setColor(embedColor)
-      .setDescription(`${emote_axe} **${player.name}** went lumbering`)
+      .setDescription(`${emote_axe} **${await player.name}** went lumbering`)
 
     let embedReceivedItemsText = '';
 

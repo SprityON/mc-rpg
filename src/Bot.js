@@ -7,7 +7,6 @@ module.exports = new class Bot {
 	constructor() {
 		this.Discord = require('discord.js');
 		this.Commands = new this.Discord.Collection(); 
-		
 
 		this.client = new this.Discord.Client({ allowedMentions: { repliedUser: false } });
 		this.run(this.client);
